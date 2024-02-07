@@ -1,0 +1,19 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-nginx
+  labels:
+    abcdesktop/role: nginx
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  selector:
+    run: nginx-od
+    {{- include "abcdesktop.selectorLabels" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30443
+    targetPort: 80
+    name: http

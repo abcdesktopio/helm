@@ -1,0 +1,52 @@
+# # Copyright abcdesktop.io
+# # Licensed under the Apache License, Version 2.0 (the "License");
+# # you may not use this file except in compliance with the License.
+# # You may obtain a copy of the License at
+# # http://www.apache.org/licenses/LICENSE-2.0
+# # Unless required by applicable law or agreed to in writing, software
+# # distributed under the License is distributed on an "AS IS" BASIS,
+# # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# # See the License for the specific language governing permissions and
+# # limitations under the License.
+
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: memcached-od 
+#   labels:
+#     abcdesktop/role: memcached
+# spec:
+#   selector:
+#     matchLabels:
+#       run: memcached-od
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         run: memcached-od
+#         type: database
+#     spec:
+#       containers:
+#       - name: memcached
+#         image: memcached 
+#         ports:
+#           - containerPort: 11211
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-memcached
+  labels:
+    abcdesktop/role: memcached
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+spec:
+  selector:
+    run: openldap-od
+    {{- include "abcdesktop.selectorLabels" . | nindent 4 }}   
+  ports:
+  - port: 11211
+    protocol: TCP
+    targetPort: 11211

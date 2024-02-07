@@ -1,0 +1,10 @@
+apiVersion: v2
+name: abcdesktop
+description: abcdesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation.
+
+icon: https://www.abcdesktop.io/img/abcdesktop128x128.ico
+type: application
+
+version: 0.1.0
+
+appVersion: "1.16.0"

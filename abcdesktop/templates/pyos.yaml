@@ -1,0 +1,84 @@
+
+
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-pyos-role
+rules:
+- apiGroups: ['']
+  resources: ['pods']
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ['']
+  resources: ['events']
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: ['']
+  resources: ['pods/exec']
+  verbs: ["create", "get", "list", "watch", "update", "patch", "delete"]
+- apiGroups: ['']
+  resources: ['pods/ephemeralcontainers']
+  verbs: ["create", "get", "list", "watch", "update", "patch", "delete"]
+- apiGroups: ['']
+  resources: ['secrets']
+  verbs:  ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ['']
+  resources: ['configmaps']
+  verbs:  ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get", "list"]
+- apiGroups: ['']
+  resources: ['pods/log']
+  verbs: ['get', 'list', 'watch' ]
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["get", "list", "create", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list", "watch", "update", "create", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-pyos-rbac
+subjects:
+- kind: ServiceAccount
+  name: {{ include "abcdesktop.fullname" . }}-pyos-serviceaccount
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "abcdesktop.fullname" . }}-pyos-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-pyos-serviceaccount
+  
+
+
+
+
+
+
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-pyos
+  labels:
+    abcdesktop/role: pyos
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+spec:
+  selector:
+    run: pyos-od
+     {{- include "abcdesktop.selectorLabels" . | nindent 4 }}
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000

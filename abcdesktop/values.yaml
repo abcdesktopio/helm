@@ -1,0 +1,30 @@
+images:
+  pullPolicy: IfNotPresent
+
+memcached:
+  image: 
+  tag:
+
+openldap:
+  image: abcdesktopio/oc.openldap
+  tag: "3.0"
+
+speedtest:
+  image: abcdesktopio/oc.speedtest
+  tag: "3.0"
+
+nginx:
+  image: abcdesktopio/oc.nginx
+  tag: "3.2"
+
+
+mongodb:
+  image: mongo
+  tag: "4.4"
+
+pyos:
+  image: abcdesktopio/oc.pyos
+  tag: "3.2"
+
+
+

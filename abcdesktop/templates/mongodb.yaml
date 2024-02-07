@@ -1,0 +1,18 @@
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-mongodb
+  labels:
+    abcdesktop/role: mongodb
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+spec:
+  selector:
+    run: mongodb-od 
+    {{- include "abcdesktop.selectorLabels" . | nindent 4 }} 
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
