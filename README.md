@@ -1,12 +1,11 @@
 # ABCDesktop helm package
 
 ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on [https://www.abcdesktop.io/](https://www.abcdesktop.io/) for more informations.
-
-## ABCDesktop parameters
+## ABCDesktop parameters
 
 The following table contains the helm parameters:
 
-| Name| Description | Value |
+|Name| Description|Value|
 |---|---|---|
 | image.pullpolicy | default image pull policy | IfNotPresent |
 | memcached.image |memcached's image | memcached |
