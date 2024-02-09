@@ -16,3 +16,165 @@ spec:
   - protocol: TCP
     port: 27017
     targetPort: 27017
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-mongodb-scripts
+  labels:
+    abcdesktop/role: mongodb-config
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+data:
+  ensure-users.js: |
+    const targetDbList = cat('/etc/abcdesktop/MONGO_DBS_LIST');
+    const rootUser = cat('/etc/abcdesktop/admin/MONGO_ROOT_USERNAME');
+    const rootPass = cat('/etc/abcdesktop/admin/MONGO_ROOT_PASSWORD');
+    const usersStr = cat('/etc/abcdesktop/MONGO_USERS_LIST');
+
+    // auth against admin
+    const adminDb = db.getSiblingDB('admin');
+    adminDb.auth(rootUser, rootPass);
+    print('Successfully authenticated admin user');
+
+    print( 'List of database' );
+    print(targetDbList );
+    const targetDbs=targetDbList.split(',');
+
+    for (targetDbStr of targetDbs) {
+      print ( 'use ' + targetDbStr );
+      // we'll create the users here
+      const targetDb = db.getSiblingDB(targetDbStr);
+      // user-defined roles should be stored in the admin db
+      const customRoles = adminDb
+        .getRoles({rolesInfo: 1, showBuiltinRoles: false})
+        .map(role => role.role)
+        .filter(Boolean);
+
+      // parse the list of users, and create each user as needed
+      usersStr
+        .trim()
+        .split(';')
+        .map(s => s.split(':'))
+        .forEach(user => {
+          const username = user[0];
+          const rolesStr = user[1];
+          const password = user[2];
+
+          if (!rolesStr || !password) {
+            return;
+          }
+
+          const roles = rolesStr.split(',');
+          const userDoc = {
+            user: username,
+            pwd: password,
+          };
+
+          userDoc.roles = roles.map(role => {
+            if (!~customRoles.indexOf(role)) {
+              // is this a user defined role?
+              return role; // no, it is built-in, just use the role name
+            }
+            return {role: role, db: 'admin'}; // yes, user-defined, specify the long format
+          });
+
+          try {
+            targetDb.createUser(userDoc);
+          } catch (err) {
+            print( err );
+            if (!~err.message.toLowerCase().indexOf('duplicate')) {
+              // if not a duplicate user
+              throw err; // rethrow
+            }
+          }
+        }
+      );
+    }
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-secret-mongodb
+  labels:
+    abcdesktop/role: secret-mongodb
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  MONGO_ROOT_USERNAME: 'root'
+  MONGO_ROOT_PASSWORD: 'Oge5iQw9dGBvRDd'
+  MONGO_USERNAME: 'pyos'
+  MONGO_PASSWORD: 'Az4MeYWUjZDg4Zjhk'
+  MONGO_USERS_LIST: 'pyos:readWrite:Az4MeYWUjZDg4Zjhk'
+  MONGO_DBS_LIST: 'image,fail2ban,loginHistory,applications,profiles'
+  MONGODB_URL: 'mongodb://pyos:Az4MeYWUjZDg4Zjhk@mongodb.abcdesktop.svc.cluster.local'
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-mongodb-od
+  labels:
+    run: mongodb-od
+    type: database
+    abcdesktop/role: mongodb
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      run: mongodb-od
+      {{- include "abcdesktop.selectorLabels" . | nindent 4 }} 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: mongodb-od
+        type: database
+        {{- include "abcdesktop.labels" . | nindent 4 }}
+    spec:
+      containers:
+      - name: {{ include "abcdesktop.fullname" . }}-mongodb
+        image:  {{ .Values.mongodb.image }}:{{ .Values.mongodb.tag }}
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME_FILE
+          value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+          value: /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD
+        volumeMounts:
+        - name: {{ include "abcdesktop.fullname" . }}-abcdesktop
+          mountPath: /etc/abcdesktop
+          readOnly: true
+        - name: {{ include "abcdesktop.fullname" . }}-mongodb-scripts
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
+      volumes:
+         - name: {{ include "abcdesktop.fullname" . }}-abcdesktop
+           secret:
+             secretName: {{ include "abcdesktop.fullname" . }}-secret-mongodb
+             items:
+             - key: MONGO_ROOT_USERNAME
+               path: admin/MONGO_ROOT_USERNAME
+               mode: 0444
+             - key: MONGO_ROOT_PASSWORD
+               path: admin/MONGO_ROOT_PASSWORD
+               mode: 0444
+             - key: MONGO_USERNAME
+               path: MONGO_USERNAME
+               mode: 0444
+             - key: MONGO_PASSWORD
+               path: MONGO_PASSWORD
+               mode: 0444
+             - key: MONGO_USERS_LIST
+               path: MONGO_USERS_LIST
+               mode: 0444
+             - key: MONGO_DBS_LIST
+               path: MONGO_DBS_LIST
+               mode: 0444
+         - name: {{ include "abcdesktop.fullname" . }}-mongodb-scripts
+           configMap:
+             name: {{ include "abcdesktop.fullname" . }}-mongodb-scripts
+             items:
+             - key: ensure-users.js
+               path: ensure-users.js

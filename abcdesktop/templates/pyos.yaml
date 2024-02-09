@@ -58,14 +58,6 @@ kind: ServiceAccount
 metadata:
   name: {{ include "abcdesktop.fullname" . }}-pyos-serviceaccount
   
-
-
-
-
-
-
-
-
 ---
 kind: Service
 apiVersion: v1
@@ -82,3 +74,113 @@ spec:
   - port: 8000
     protocol: TCP
     targetPort: 8000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-pyos-od
+  labels:
+    abcdesktop/role: pyos
+    {{- include "abcdesktop.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: pyos-od
+      {{- include "abcdesktop.selectorLabels" . | nindent 4 }}
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace }}
+      labels:
+        name: pyos-od
+        run: pyos-od
+        netpol/https: 'true'
+        netpol/ldaps: 'true'
+        netpol/auth: 'true'
+        netpol/cifs: 'true'
+        netpol/api: 'true'
+        netpol/dns: 'true'
+        netpol/mongodb: 'true'
+        netpol/memcached: 'true'
+        netpol/graylog: 'true'
+        {{- include "abcdesktop.labels" . | nindent 4 }}
+    spec:
+      serviceAccountName: {{ include "abcdesktop.fullname" . }}-pyos-serviceaccount
+      containers:
+      - name : {{ include "abcdesktop.fullname" . }}-pyos
+        imagePullPolicy: Always
+        image: {{ .Values.pyos.image }}:{{ .Values.pyos.tag }}
+        command:
+            - "/var/pyos/od.py"
+        volumeMounts:
+          - name: {{ include "abcdesktop.fullname" . }}-jwtsigningkeys
+            mountPath: "/config.signing"
+            readOnly: true
+          - name: {{ include "abcdesktop.fullname" . }}-jwtusersigningkeys
+            mountPath: "/config.usersigning"
+            readOnly: true
+          - name: {{ include "abcdesktop.fullname" . }}-jwtpayloadkeys
+            mountPath: "/config.payload"
+            readOnly: true
+          - name: {{ include "abcdesktop.fullname" . }}-volume-abcdesktop-config
+            mountPath: /var/pyos/od.config
+            subPath: od.config
+            readOnly: true
+        ports:
+          - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /API/healthz
+            port: 8000
+          failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /API/healthz
+            port: 8000
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 2
+            memory: 1024Mi
+          requests:
+            cpu: 0.5
+            memory: 128Mi
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MONGODB_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "abcdesktop.fullname" . }}-secret-mongodb
+                key: MONGODB_URL
+      volumes:
+        - name: {{ include "abcdesktop.fullname" . }}-jwtusersigningkeys
+          secret:
+            secretName: {{ .Values.secrets.jwtusersigningkeys }}
+        - name: {{ include "abcdesktop.fullname" . }}-jwtsigningkeys
+          secret:
+            secretName: {{ .Values.secrets.jwtdesktopsigning }}
+        - name: {{ include "abcdesktop.fullname" . }}-jwtpayloadkeys
+          secret:
+            secretName: {{ .Values.secrets.jwtdesktoppayload }}
+        - name: {{ include "abcdesktop.fullname" . }}-volume-abcdesktop-config
+          configMap:
+            name: {{ .Values.config }}
+      dnsPolicy: ClusterFirst

@@ -10,3 +10,7 @@ clean:
 
 deploy:
 	helm upgrade --install abcdesktop --create-namespace ./abcdesktop-0.1.0.tgz -n abcdesktop
+
+
+uninstall:
+	helm uninstall abcdesktop -n abcdesktop

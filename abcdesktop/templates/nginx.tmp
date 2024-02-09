@@ -1,0 +1,157 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-nginx-config
+  labels:
+    abcdesktop/role: nginx-config
+#    {{- include "abcdesktop.labels" . | nindent 4 }}
+data:
+  default: | 
+    lua_package_path "/usr/local/share/lua/5.1/?.lua;;";
+    types {
+        # Web fonts
+        application/font-woff2               woff2;
+        application/-font-ttf                ttc ttf;
+        font/opentype                        otf;
+    }
+    server {
+        resolver 'kube-dns.kube-system.svc.cluster.local';
+        set $my_speedtest 'speedtest.abcdesktop.svc.cluster.local';
+        set $my_proxy 'pyos.abcdesktop.svc.cluster.local';
+        listen 80;
+        server_name _;
+        root /var/webModules;
+        index index.html index.htm;
+        # default abcdesktop.io oc.user tcp port
+        set $pulseaudio_http_port               4714;
+        set $ws_tcp_bridge_tcp_port             6081;
+        set $api_service_tcp_port               8000;
+        set $filemanager_bridge_tcp_port        29780;
+        set $xterm_tcp_port                     29781;
+        set $printerfile_service_tcp_port       29782;
+        set $file_service_tcp_port              29783;
+        set $broadcast_tcp_port                 29784;
+        set $lync_service_tcp_port              29785;
+        set $spawner_service_tcp_port           29786;
+        set $signalling_service_tcp_port        29787;         
+        # uncomment to use env var
+        # set_by_lua  $filemanager_bridge_tcp_port 'return os.getenv("FILEMANAGER_BRIDGE_TCP_PORT")';
+        # set_by_lua  $broadcast_tcp_port 'return os.getenv("BROADCAST_SERVICE_TCP_PORT")';
+        # set_by_lua  $ws_tcp_bridge_tcp_port 'return os.getenv("WS_TCP_BRIDGE_SERVICE_TCP_PORT")';
+        # set_by_lua  $spawner_service_tcp_port 'return os.getenv("SPAWNER_SERVICE_TCP_PORT")';
+        # set_by_lua  $xterm_tcp_port 'return os.getenv("XTERM_TCP_PORT")';
+        # set_by_lua  $file_service_tcp_port 'return os.getenv("FILE_SERVICE_TCP_PORT")';
+        # set_by_lua  $pulseaudio_http_port 'return os.getenv("PULSEAUDIO_HTTP_PORT")';
+        location /nstatus {
+                 # allow 127.0.0.1;
+                 # deny all;
+                 stub_status;
+        }
+        
+        include route.conf;
+    }
+
+
+
+
+
+# ---
+# apiVersion: apps/v1
+# kind: Deployment 
+# metadata:
+#   name: {{ include "abcdesktop.fullname" . }}-nginx-od
+#   labels:
+#     abcdesktop/role: nginx
+#     {{- include "abcdesktop.labels" . | nindent 4 }}
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       name: nginx-od
+#       {{- include "abcdesktop.selectorLabels" . | nindent 4 }}
+#   template:
+#     metadata:
+#       namespace: {{ .Release.Namespace }}
+#       labels:
+#         name: nginx-od
+#         run: nginx-od
+#         type: frontend
+#         netpol/speedtest: 'true'
+#         netpol/memcached: 'true'
+#         netpol/pyos: 'true'
+#         netpol/ocuser: 'true'
+#         netpol/dns: 'true'
+# #        {{- include "abcdesktop.labels" . | nindent 4 }}
+#     spec:
+#       containers:
+#       - name: {{ include "abcdesktop.fullname" . }}-nginx
+#         imagePullPolicy: Always
+#         image: {{ .Values.nginx.image }}:{{ .Values.nginx.tag }}
+#         volumeMounts:
+#           - name: {{ include "abcdesktop.fullname" . }}-jwtsigningkeys
+#             mountPath: "/config.signing"
+#             readOnly: true
+#           - name: {{ include "abcdesktop.fullname" . }}-jwtpayloadkeys
+#             mountPath: "/config.payload"
+#             readOnly: true
+#           - name: {{ include "abcdesktop.fullname" . }}-default-config
+#             mountPath: /etc/nginx/sites-enabled/default
+#             subPath: default
+#             readOnly: true
+#         ports:
+#           - containerPort: 80
+#             name: http
+#           - containerPort: 443
+#             name: https
+#         livenessProbe:
+#           httpGet:
+#             path: /
+#             port: 80
+#           failureThreshold: 1
+#           periodSeconds: 10
+#         startupProbe:
+#           httpGet:
+#             path: /
+#             port: 80
+#           failureThreshold: 5
+#           periodSeconds: 10
+#         resources:
+#           limits:
+#             cpu: 2
+#             memory: 1024Mi
+#           requests:
+#             cpu: 0.25
+#             memory: 64Mi
+#         env:
+#           - name: JWT_DESKTOP_PAYLOAD_PRIVATE_KEY
+#             value: "/config.payload/abcdesktop_jwt_desktop_payload_private_key.pem"
+#           - name: JWT_DESKTOP_SIGNING_PUBLIC_KEY
+#             value: "/config.signing/abcdesktop_jwt_desktop_signing_public_key.pem"
+#           - name: NODE_NAME
+#             valueFrom:
+#               fieldRef:
+#                 fieldPath: spec.nodeName
+#           - name: POD_NAME
+#             valueFrom:
+#               fieldRef:
+#                 fieldPath: metadata.name
+#           - name: POD_NAMESPACE
+#             valueFrom:
+#               fieldRef:
+#                 fieldPath: metadata.namespace
+#           - name: POD_IP
+#             valueFrom:
+#               fieldRef:
+#                 fieldPath: status.podIP
+#       volumes:
+#         - name: {{ include "abcdesktop.fullname" . }}-jwtsigningkeys
+#             secret:
+#               secretName: {{ .Values.nginx.secrets.jwtsigningkeys }}
+#           - name: {{ include "abcdesktop.fullname" . }}-jwtpayloadkeys
+#             secret:
+#               secretName: {{ .Values.nginx.secrets.jwtpayloadkeys }}
+#           - name: {{ include "abcdesktop.fullname" . }}-default-config
+#             configMap:
+#               name: {{ include "abcdesktop.fullname" . }}-nginx-config
+#       dnsPolicy: ClusterFirst

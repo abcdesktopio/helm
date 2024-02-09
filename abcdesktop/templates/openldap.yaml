@@ -13,9 +13,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openldap-od 
+  name: {{ include "abcdesktop.fullname" . }}-openldap-od 
   labels:
     abcdesktop/role: openldap
+    {{- include "abcdesktop.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:

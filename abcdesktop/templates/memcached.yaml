@@ -9,29 +9,30 @@
 # # See the License for the specific language governing permissions and
 # # limitations under the License.
 
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: memcached-od 
-#   labels:
-#     abcdesktop/role: memcached
-# spec:
-#   selector:
-#     matchLabels:
-#       run: memcached-od
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         run: memcached-od
-#         type: database
-#     spec:
-#       containers:
-#       - name: memcached
-#         image: memcached 
-#         ports:
-#           - containerPort: 11211
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "abcdesktop.fullname" . }}-memcached-od 
+  labels:
+    abcdesktop/role: memcached
+spec:
+  selector:
+    matchLabels:
+      run: memcached-od
+      {{- include "abcdesktop.selectorLabels" . | nindent 4 }} 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: memcached-od
+        type: database
+    spec:
+      containers:
+      - name: {{ include "abcdesktop.fullname" . }}-memcached
+        image: {{ .Values.memcached.image }}:{{ .Values.memcached.tag }}
+        ports:
+          - containerPort: 11211
 
 
 ---

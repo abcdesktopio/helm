@@ -2,8 +2,8 @@ images:
   pullPolicy: IfNotPresent
 
 memcached:
-  image: 
-  tag:
+  image: memcached
+  tag: "latest"
 
 openldap:
   image: abcdesktopio/oc.openldap
@@ -16,6 +16,16 @@ speedtest:
 nginx:
   image: abcdesktopio/oc.nginx
   tag: "3.2"
+
+# Secret MUST exists before helm deployment
+secrets:
+  jwtsigningkeys: ""
+  jwtpayloadkeys: ""
+  jwtusersigningkeys: ""
+  jwtdesktopsigning: ""
+  jwtdesktoppayload: ""
+
+config: ""
 
 
 mongodb:
