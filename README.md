@@ -4,6 +4,8 @@ ABCDesktop is a cloud native desktopless service, and a complete work environmen
 
 ## ABCDesktop parameters
 
+The following table contains the helm parameters:
+
 | Name| Description | Value |
 |---|---|---|
 | image.pullpolicy | default image pull policy | IfNotPresent |
