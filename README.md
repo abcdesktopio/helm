@@ -124,8 +124,7 @@ for the deployment.
 
 The `uninstall` target is used to uninstall the Helm chart from a Kubernetes cluster. This is accomplished by using the `helm uninstall` command with the name of the release and namespace.
 
-Usage:
-------
+### Usage:
 
 To use this Makefile, save it in the root directory of your Helm chart (i.e., the same directory as your `Chart.yaml` file), and then run `make` or specify a target, such as `make build`. For example:
 
