@@ -27,15 +27,15 @@ The following table contains the helm parameters:
 | secrets.jwtdesktoppayload| name of the Secret containing desktop payload key | "" |
 | config| name of the ABCDesktop ConfigMap containing configuration|""|
 
-
 Note Secrets and ConfigMap MUST exists before helm deployment.
 
-## Build helm from sources
+## Build helm from sources 
+
+## Manual
 
 The following commands are required ( installation depends of your operating system):
 - **helm** 
 - **git**
-
 
 First clone the project on the build host:
 
@@ -76,13 +76,10 @@ helm lint abcdesktop-0.1.0.tgz
 helm upgrade --install abcdesktop --create-namespace ./abcdesktop-0.1.0.tgz  -n abcdesktop
 ~~~
 
-
-
-
 ## Uninstall
 
 ~~~ bash
-helm uninstall abcdesktop
+helm uninstall abcdesktop -n abcdesktop
 ~~~
 
 where **abcdesktop** is the instance name.
