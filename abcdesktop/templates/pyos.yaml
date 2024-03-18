@@ -182,5 +182,5 @@ spec:
             secretName: {{ .Values.secrets.jwtdesktoppayload }}
         - name: {{ include "abcdesktop.fullname" . }}-volume-abcdesktop-config
           configMap:
-            name: {{ .Values.config }}
+            name: {{ include "abcdesktop.fullname" . }}-abcdesktop-config
       dnsPolicy: ClusterFirst
