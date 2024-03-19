@@ -41,11 +41,11 @@ The following table contains the helm parameters:
 | config.fail2ban |||
 | config.auth.logmein|||
 | config.auth.prelogin|||
-| config.language||||
-| config.webrtc.enable : False
+| config.language|||
+| config.webrtc.enable || False|
 | config.webrtc.rtc_constraints
-| config.K8S_BOUND_PVC_TIMEOUT_SECONDS||||
-| config.K8S_CREATE_POD_TIMEOUT_SECONDS||||
+| config.K8S_BOUND_PVC_TIMEOUT_SECONDS|||
+| config.K8S_CREATE_POD_TIMEOUT_SECONDS|||
 | config.executeclasses||||
 | config.desktop.release||||
 | config.desktop.secretslocalaccount ||/etc/localaccount|

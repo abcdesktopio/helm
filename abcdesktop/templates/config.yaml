@@ -6,6 +6,9 @@ metadata:
   labels:
     {{- include "abcdesktop.labels" . | nindent 4 }}
 data: |-
+  [default]
   {{- range $key, $value := .Values.config }}
   {{ $key }}:{{ $value }}
   {{- end }}
+  [/]
+  [/img]
