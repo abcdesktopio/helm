@@ -53,7 +53,7 @@ openldap:
   resources:
     limits:
       cpu: 0.5
-      memory: 1024Mi
+      memory: 2048Mi
     requests:
       cpu: 0.1
       memory: 128Mi
@@ -65,7 +65,7 @@ pyos:
   resources:
     limits:
       cpu: 1
-      memory: 1024Mi
+      memory: 2048Mi
     requests:
       cpu: 0.5
       memory: 256Mi
