@@ -520,56 +520,6 @@ od_config: |
     #
     #
     webrtc.enable : False # by default no sound
-    # 
-    # install a coturn server first with TLS support
-    # /etc/turnserver.conf
-    # # minimal configurtion file for /etc/turnserver.conf
-    # # use TLS/SSL
-    # lt-cred-mech
-    # use-auth-secret
-    # static-auth-secret=SUPERSECRETFORABCDESKTOPUSERS
-    # # Certificate file.
-    # # Use an absolute path or path relative to the
-    # # configuration file.
-    # # Use PEM file format.
-    # cert=/etc/certs/fullchain.pem
-    # # Private key file.
-    # # Use an absolute path or path relative to the
-    # # configuration file.
-    # # Use PEM file format.
-    # pkey=/etc/certs/privkey.pem
-    #
-    # in most cases, you need a stun and turn servers
-    # 
-    # webrtc.rtc_configuration:{ 'iceServers':[ {'urls':'stun:stun.l.google.com:19302'} ] }
-    # webrtc.coturn: { 
-    #  'coturn_static_auth_secret': 'SUPERSECRETFORABCDESKTOPUSERS', 
-    #  'ttl':3600, 
-    #  'protocol': 'turns',
-    #  'url': 'turnserver.domain.local:3478' }
-    #  
-    #  'coturn_static_auth_secret' is the sahred secret with coturn server
-    #  'ttl' : ttl for auth
-    #  'protocol': can be 'turn' or 'turns'
-    #  'url': turn server or turns server for the web browser 
-    #
-    # pyos will build the rtc_configuration json conf 
-    #
-    # webrtc.rtc_configuration becomes
-    # # {
-    # #   "iceServers": [
-    # #       {
-    # #           "urls": "stun:stun.l.google.com:19302"
-    # #      },
-    # #       {
-    # #           "urls": "turns:nturns.domain.local:3478",
-    # #           "username": "1703086872",
-    # #           "credential": "+BuFkb0hFf8pAoFwpp0A0UbO+1k="
-    # #       }
-    # #   ]
-    # # }
-
-
     #
     # webrtc.rtc_constraints
     # webrtc.rtc_constraints: { 'video': False, 'audio': True }
@@ -583,7 +533,6 @@ od_config: |
     # https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     #
     webrtc.rtc_constraints: { 'video': False, 'audio': True }
-
     # END OF WebRTC SECTION
 
     # K8S TIMEOUT 
@@ -815,7 +764,7 @@ od_config: |
         'acl':  { 'permit': [ 'all' ] },
         'resources': { 
           'requests': { 'memory': "8Mi",  'cpu': "5m"  },  
-          'limits'  : { 'memory': "32Mi", 'cpu': "10m" } 
+          'limits'  : { 'memory': "64Mi", 'cpu': "100m" } 
         }, 
         'command':  [ 'sh', '-c',  'chmod 750 ~ && chown {{ uidNumber }}:{{ gidNumber }} ~' ] 
       },
