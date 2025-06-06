@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pyos
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: pyos
+spec:
+  selector:
+    run: pyos-od
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 8000

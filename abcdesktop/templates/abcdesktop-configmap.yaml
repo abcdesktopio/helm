@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: abcdesktop-config
+  namespace: {{ .Release.Namespace }}
+data:
+  "od.config": |
+{{ .Values.od_config | indent 4  }}

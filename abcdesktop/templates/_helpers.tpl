@@ -60,3 +60,11 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "abcdesktop.mongorootpassword" -}}
+{{- randAlphaNum 16 | b64enc | trunc 16 -}}
+{{- end }}
+
+{{- define "abcdesktop.mongopassword" -}}
+{{- randAlphaNum 16 | b64enc | trunc 16 -}}
+{{- end }}

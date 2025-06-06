@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: abcdesktop
+  name: nginx-od
+  labels:
+    namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.website.replicaCount }}
+  selector:
+    matchLabels:
+      name: nginx-od
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace }}
+      labels:
+        name: nginx-od
+        run: nginx-od
+        type: frontend
+    spec:
+      containers:
+      - name: nginx
+        imagePullPolicy: Always
+        image: {{ .Values.website.image }}:{{ .Values.website.tag }}
+        ports:
+          - containerPort: 80
+            name: http
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /
+            port: 80
+          failureThreshold: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: {{ .Values.website.resources.limits.cpu }}
+            memory: {{ .Values.website.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.website.resources.requests.cpu }}
+            memory: {{ .Values.website.resources.requests.memory }}

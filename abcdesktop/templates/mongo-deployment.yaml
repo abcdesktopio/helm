@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-od
+  namespace: {{ .Release.Namespace }}
+  labels:
+    run: mongodb-od
+    type: database
+    abcdesktop/role: mongodb
+spec:
+  selector:
+    matchLabels:
+      run: mongodb-od
+  replicas: {{ .Values.mongo.replicaCount }}
+  template:
+    metadata:
+      labels:
+        run: mongodb-od
+        type: database
+    spec:
+      containers:
+      - name: mongodb
+        image: {{ .Values.mongo.image }}:{{ .Values.mongo.tag }}
+        resources:
+          limits:
+            cpu: {{ .Values.mongo.resources.limits.cpu }}
+            memory: {{ .Values.mongo.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.mongo.resources.requests.cpu }}
+            memory: {{ .Values.mongo.resources.requests.memory }}
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME_FILE
+          value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+          value: /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD
+        volumeMounts:
+        - name: abcdesktop
+          mountPath: /etc/abcdesktop
+          readOnly: true
+        - name: mongodb-scripts
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
+      volumes:
+         - name: abcdesktop
+           secret:
+             secretName: secret-mongodb
+             items:
+             - key: MONGO_ROOT_USERNAME
+               path: admin/MONGO_ROOT_USERNAME
+               mode: 0444
+             - key: MONGO_ROOT_PASSWORD
+               path: admin/MONGO_ROOT_PASSWORD
+               mode: 0444
+             - key: MONGO_USERNAME
+               path: MONGO_USERNAME
+               mode: 0444
+             - key: MONGO_PASSWORD
+               path: MONGO_PASSWORD
+               mode: 0444
+             - key: MONGO_USERS_LIST
+               path: MONGO_USERS_LIST
+               mode: 0444
+             - key: MONGO_DBS_LIST
+               path: MONGO_DBS_LIST
+               mode: 0444
+         - name: mongodb-scripts
+           configMap:
+             name: configmap-mongodb-scripts 
+             items:
+             - key: ensure-users.js
+               path: ensure-users.js

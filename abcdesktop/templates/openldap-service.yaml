@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: openldap
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: openldap
+spec:
+  selector:
+    run: openldap-od
+  ports:
+  - name: ldap
+    protocol: TCP
+    port: 389
+    targetPort: 10389
+  - name: ldaps
+    protocol: TCP
+    port: 636
+    targetPort: 10636

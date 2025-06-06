@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: memcached
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: memcached
+spec:
+  selector:
+    run: memcached-od
+  ports:
+  - port: 11211
+    protocol: TCP
+    targetPort: 11211

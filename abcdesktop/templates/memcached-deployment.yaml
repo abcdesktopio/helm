@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: memcached-od
+  labels:
+    abcdesktop/role: memcached
+spec:
+  selector:
+    matchLabels:
+      run: memcached-od
+  replicas: {{ .Values.memcached.replicaCount }}
+  template:
+    metadata:
+      labels:
+        run: memcached-od
+        type: database
+    spec:
+      containers:
+      - name: memcached
+        image: {{ .Values.memcached.image }}:{{ .Values.memcached.tag }}
+        resources:
+          limits:
+            cpu: {{ .Values.memcached.resources.limits.cpu }}
+            memory: {{ .Values.memcached.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.memcached.resources.requests.cpu }}
+            memory: {{ .Values.memcached.resources.requests.memory }}
+        ports:
+          - containerPort: 11211

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mongodb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: mongodb
+spec:
+  selector:
+    run: mongodb-od 
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017

@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: console-od
+  labels:
+    abcdesktop/role: console
+spec:
+  selector:
+    matchLabels:
+      run: console-od
+  replicas: {{ .Values.console.replicaCount }}
+  template:
+    metadata:
+      labels:
+        run: console-od
+        type: admin-console
+    spec:
+      containers:
+      - name: console
+        image: {{ .Values.console.image }}:{{ .Values.console.tag }}
+        ports:
+          - containerPort: 80
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        resources:
+          limits:
+            cpu: {{ .Values.console.resources.limits.cpu }}
+            memory: {{ .Values.console.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.console.resources.requests.cpu }}
+            memory: {{ .Values.console.resources.requests.memory }}

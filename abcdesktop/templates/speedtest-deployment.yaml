@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: speedtest-od
+  labels:
+    abcdesktop/role: speedtest
+spec:
+  selector:
+    matchLabels:
+      run: speedtest-od
+  replicas: {{ .Values.speedtest.replicaCount }}
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace }}
+      labels:
+        run: speedtest-od 
+    spec:
+      containers:
+      - name: speedtest
+        resources:
+          limits:
+            cpu: {{ .Values.speedtest.resources.limits.cpu }}
+            memory: {{ .Values.speedtest.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.speedtest.resources.requests.cpu }}
+            memory: {{ .Values.speedtest.resources.requests.memory }}
+        image: {{ .Values.speedtest.image }}:{{ .Values.speedtest.tag }}
+        ports:
+          - containerPort: 80

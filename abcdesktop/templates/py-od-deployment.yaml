@@ -1,0 +1,137 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: pyos-os
+  labels:
+    abcdesktop/role: pyos
+spec:
+  replicas: {{ .Values.pyos.replicaCount }}
+  selector:
+    matchLabels:
+      name: pyos-od
+  template:
+    metadata:
+      namespace: {{ .Release.Namespace }}
+      labels:
+        name: pyos-od
+        run: pyos-od
+        netpol/https: 'true'
+        netpol/ldaps: 'true'
+        netpol/auth: 'true'
+        netpol/cifs: 'true'
+        netpol/api: 'true'
+        netpol/dns: 'true'
+        netpol/mongodb: 'true'
+        netpol/memcached: 'true'
+        netpol/graylog: 'true'
+        netpol/router: 'true'
+        netpol/nginx: 'true'
+    spec:
+      serviceAccountName: pyos-serviceaccount
+      containers:
+      - name : pyos
+        imagePullPolicy: Always
+        image: {{ .Values.pyos.image }}:{{ .Values.pyos.tag }}
+        volumeMounts:
+          - name: jwtsigningkeys
+            mountPath: "/config.signing"
+            readOnly: true
+          - name: jwtusersigningkeys
+            mountPath: "/config.usersigning"
+            readOnly: true
+          - name: jwtpayloadkeys
+            mountPath: "/config.payload"
+            readOnly: true
+          - name: volume-abcdesktop-config
+            mountPath: /var/pyos/od.config
+            subPath: od.config
+            readOnly: true
+          - name: volume-abcdesktop-passwd-templatefile
+            mountPath: /var/pyos/passwd
+            subPath: passwd
+            readOnly: true
+          - name: volume-abcdesktop-group-templatefile
+            mountPath: /var/pyos/group
+            subPath: group
+            readOnly: true
+          - name: volume-abcdesktop-shadow-templatefile
+            mountPath: /var/pyos/shadow
+            subPath: shadow
+            readOnly: true
+          - name: volume-abcdesktop-gshadow-templatefile
+            mountPath: /var/pyos/gshadow
+            subPath: gshadow
+            readOnly: true
+        ports:
+          - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /API/healthz
+            port: 8000
+          failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /API/healthz
+            port: 8000
+          failureThreshold: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: {{ .Values.pyos.resources.limits.cpu }}
+            memory: {{ .Values.pyos.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.pyos.resources.requests.cpu }}
+            memory: {{ .Values.pyos.resources.requests.memory }}
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MONGODB_URL
+            valueFrom:
+              secretKeyRef:
+                name: secret-mongodb
+                key: MONGODB_URL
+          - name: OAUTHLIB_RELAX_TOKEN_SCOPE
+            value: "1"
+      volumes:
+        - name: jwtusersigningkeys
+          secret:
+            secretName: abcdesktopjwtusersigning
+        - name: jwtsigningkeys
+          secret:
+            secretName: abcdesktopjwtdesktopsigning
+        - name: jwtpayloadkeys
+          secret:
+            secretName: abcdesktopjwtdesktoppayload
+        - name: volume-abcdesktop-config
+          configMap:
+            name: abcdesktop-config
+        - name: volume-abcdesktop-passwd-templatefile
+          configMap:
+            name: abcdesktop-passwd-templatefile
+        - name: volume-abcdesktop-group-templatefile
+          configMap:
+            name: abcdesktop-group-templatefile
+        - name: volume-abcdesktop-shadow-templatefile
+          configMap:
+            name: abcdesktop-shadow-templatefile
+        - name: volume-abcdesktop-gshadow-templatefile
+          configMap:
+            name: abcdesktop-gshadow-templatefile
+      dnsPolicy: ClusterFirst

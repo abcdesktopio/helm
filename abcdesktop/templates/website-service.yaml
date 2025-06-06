@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: website
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: nginx
+spec:
+  selector:
+    run: nginx-od
+  ports:
+  - protocol: TCP
+    port: 80
+    name: http

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: console
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: console
+spec:
+  selector:
+    run: console-od
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
