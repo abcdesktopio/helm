@@ -107,6 +107,51 @@ $ helm lint abcdesktop-4.0.0.tgz
 
 ## Install helm package
 
+## Certificates
+
+By default, the helm creates self-signed certificates but you can provide your own before deploying the helm:
+
+First generate your certificates:
+
+~~~ bash
+openssl genrsa -out abcdesktop_jwt_desktop_payload_private_key.pem 1024
+openssl rsa -in abcdesktop_jwt_desktop_payload_private_key.pem -outform PEM -pubout -out  _abcdesktop_jwt_desktop_payload_public_key.pem
+openssl rsa -pubin -in _abcdesktop_jwt_desktop_payload_public_key.pem -RSAPublicKey_out -out abcdesktop_jwt_desktop_payload_public_key.pem
+openssl genrsa -out abcdesktop_jwt_desktop_signing_private_key.pem 1024
+openssl rsa -in abcdesktop_jwt_desktop_signing_private_key.pem -outform PEM -pubout -out abcdesktop_jwt_desktop_signing_public_key.pem
+openssl genrsa -out abcdesktop_jwt_user_signing_private_key.pem 1024
+openssl rsa -in abcdesktop_jwt_user_signing_private_key.pem -outform PEM -pubout -out abcdesktop_jwt_user_signing_public_key.pem
+~~~
+
+Then create the target namespace in wich abcdesktop will be deployed:
+
+~~~ bash
+kubectl create namespace abcdesktop
+~~~
+
+and, create the kubernetes secrets from the new key files into the target namespace:
+
+~~~ bash
+kubectl create secret generic abcdesktopjwtdesktoppayload --from-file=abcdesktop_jwt_desktop_payload_private_key.pem --from-file=abcdesktop_jwt_desktop_payload_public_key.pem --namespace=abcdesktop
+kubectl create secret generic abcdesktopjwtdesktopsigning --from-file=abcdesktop_jwt_desktop_signing_private_key.pem --from-file=abcdesktop_jwt_desktop_signing_public_key.pem --namespace=abcdesktop
+kubectl create secret generic abcdesktopjwtusersigning --from-file=abcdesktop_jwt_user_signing_private_key.pem --from-file=abcdesktop_jwt_user_signing_public_key.pem --namespace=abcdesktop
+~~~
+
+You can verify secrets creation with the following command :
+
+~~~ bash
+kubectl get secrets -n abcdesktop
+~~~
+
+You should read on the standard output :
+
+~~~ bash
+NAME                          TYPE                                  DATA   AGE
+abcdesktopjwtdesktoppayload   Opaque                                2      68s
+abcdesktopjwtdesktopsigning   Opaque                                2      68s
+abcdesktopjwtusersigning      Opaque                                2      67s
+~~~
+
 ### From local package
 
 ~~~ bash
