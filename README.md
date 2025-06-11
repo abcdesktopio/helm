@@ -83,7 +83,7 @@ $ git clone https://github.com/abcdesktopio/helm.git
 and move to the project directory:
 
 ~~~ bash
-$ cd helm
+$ cd helm/charts/
 ~~~
 
 and build package:
@@ -152,7 +152,30 @@ abcdesktopjwtdesktopsigning   Opaque                                2      68s
 abcdesktopjwtusersigning      Opaque                                2      67s
 ~~~
 
-### From local package
+### Install from online repo
+
+Please install the Helm repository as instructed and run the resynchronization process to ensure all configurations are up-to-date. Follow these steps:
+
+~~~ bash
+helm repo add abcdesktop https://abcdesktopio.github.io/helm/
+helm repo update
+~~~
+
+To list the available versions, run the command:
+
+~~~ bash
+helm search repo abcdesktop
+NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
+abcdesktop/abcdesktop	4.0.0        	4.0.0      	ABCDesktop helm chart
+~~~
+
+Then to install:
+
+~~~ bash
+helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n abcdesktop
+~~~
+
+### From local build
 
 ~~~ bash
 $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.0.0.tgz  -n abcdesktop
