@@ -66,7 +66,7 @@ The following table contains the helm parameters:
 | `speedtest.resources.requests.memory` | Memory request                            | `32Mi`                                      |
 | `od_config`                           | configuration file for abcdesktop         | *default configuration file*                |
 
-Note Secrets and ConfigMap MUST exists before helm deployment.
+Note Secrets and ConfigMap should exists before helm deployment, if not it will be created.
 
 ## Build helm from sources
 
