@@ -2,7 +2,7 @@
 
 ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on https://www.abcdesktop.io/ for more informations.
 
-## ABCDesktop parameters
+## ABCDesktop parameters
 
 The following table contains the helm parameters:
 
@@ -70,8 +70,6 @@ Note Secrets and ConfigMap MUST exists before helm deployment.
 
 ## Build helm from sources
 
-## Manual
-
 The following commands are required ( installation depends of your operating system):
 - **helm**
 - **git**
@@ -107,7 +105,7 @@ $ helm lint abcdesktop-4.0.0.tgz
 ========================================
 ~~~
 
-##  Install helm package
+## Install helm package
 
 ### From local package
 
