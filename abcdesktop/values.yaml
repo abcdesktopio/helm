@@ -94,27 +94,9 @@ speedtest:
       cpu: 0.1
       memory: 32Mi
 
-jwt:
-  desktoppayload:
-    # secretName: abcdesktopjwtdesktoppayload
-    secretName:
-  desktopsigning:
-    #   secretName: abcdesktopjwtdesktopsigning
-    secretName:
-  usersigning:
-  #   secretName: abcdesktopjwtusersigning
-    secretName:
-
-
-
-# autoscaling:
-#   enabled: false
-#   minReplicas: 1
-#   maxReplicas: 100
-#   targetCPUUtilizationPercentage: 80
-#   # targetMemoryUtilizationPercentage: 80
-
-
+keysgenerator:
+  image: ghcr.io/abcdesktopio/keysgenerator
+  tag: "4.0"
 
 od_config: |
     # od.config
