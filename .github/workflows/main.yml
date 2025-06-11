@@ -24,11 +24,16 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
+      # - name: Run chart-releaser
+      #   uses: helm/chart-releaser-action@v1.6.0
+      #   with:
+      #     skip_existing: false
+      #     packages_with_index: true
+      #   env:
+      #     CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     CR_VERBOSE: "true"
+
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
         with:
-          skip_existing: false
-          packages_with_index: true
-        env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CR_VERBOSE: "true"
+          token: ${{ secrets.GITHUB_TOKEN }}
