@@ -3,13 +3,13 @@ entries:
   abcdesktop:
   - apiVersion: v2
     appVersion: 4.0.0
-    created: "2025-06-11T14:58:45.505914787Z"
+    created: "2025-06-11T15:01:37.487379223Z"
     description: ABCDesktop helm chart
-    digest: 724a3a2130d7e07ef4b0c28952f49c8269bb46460d29c2f30af92fa57452eecf
+    digest: f81926cc59cc0b3634d9845df26ebdcc37d0d69a5994494facb27ee3eda0b40d
     icon: https://www.abcdesktop.io/img/abcdesktop.svg
     name: abcdesktop
     type: application
     urls:
     - https://abcdesktopio.github.io/helm/abcdesktop-4.0.0.tgz
     version: 4.0.0
-generated: "2025-06-11T14:58:45.503862544Z"
+generated: "2025-06-11T15:01:37.484754737Z"
