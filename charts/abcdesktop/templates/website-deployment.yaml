@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: abcdesktop
+  namespace: {{ .Release.Namespace }}
   name: nginx-od
   labels:
     namespace: {{ .Release.Namespace }}
