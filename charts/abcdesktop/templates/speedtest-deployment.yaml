@@ -27,4 +27,4 @@ spec:
             memory: {{ .Values.speedtest.resources.requests.memory }}
         image: {{ .Values.speedtest.image }}:{{ .Values.speedtest.tag }}
         ports:
-          - containerPort: 80
+          - containerPort: 8080
