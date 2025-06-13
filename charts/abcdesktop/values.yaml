@@ -45,6 +45,13 @@ website:
     requests:
       cpu: 0.1
       memory: 8Mi
+  # Experimental
+  autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
 
 openldap:
   image: ghcr.io/abcdesktopio/docker-test-openldap
@@ -69,6 +76,13 @@ pyos:
     requests:
       cpu: 0.5
       memory: 256Mi
+  # Experimental
+  autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80      
 
 router:
   image: ghcr.io/abcdesktopio/route
@@ -81,6 +95,13 @@ router:
     requests:
       cpu: 0.25
       memory: 16Mi
+  # Experimental
+  autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
 
 speedtest:
   image: ghcr.io/librespeed/speedtest
