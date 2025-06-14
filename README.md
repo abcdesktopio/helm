@@ -1,6 +1,36 @@
 # ABCDesktop helm package
 
-ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on https://www.abcdesktop.io/ for more informations.
+ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on https://www.abcdesktop.io/ to get more informations.
+
+## To install
+
+Add repository
+
+```
+helm repo add abcdesktop https://abcdesktopio.github.io/helm/
+```
+
+
+Install chart
+
+```
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.0.0 --create-namespace -n abcdesktop
+```
+
+Connect to the service
+
+When install your helm installation process is ready, you need to forward the pod's router tcp port 80 to your localhost port 30443 (for example)
+
+```
+LOCAL_PORT=30443
+NAMESPACE=abcdesktop
+kubectl port-forward $(kubectl get pods -l run=router-od -o jsonpath={.items..metadata.name} -n ${NAMESPACE} ) --address 0.0.0.0 "${LOCAL_PORT}:80" -n ${NAMESPACE}
+``` 
+
+Open your web browser
+
+Open URL [http://localhost:30443](http://localhost:30443) 
+
 
 ## ABCDesktop parameters
 
