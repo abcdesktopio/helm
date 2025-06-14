@@ -74,7 +74,7 @@ pyos:
       cpu: 1
       memory: 2048Mi
     requests:
-      cpu: 0.5
+      cpu: 0.1
       memory: 256Mi
   # Experimental
   autoscaling:
@@ -93,7 +93,7 @@ router:
       cpu: 0.5
       memory: 512Mi
     requests:
-      cpu: 0.25
+      cpu: 0.1
       memory: 16Mi
   # Experimental
   autoscaling:
