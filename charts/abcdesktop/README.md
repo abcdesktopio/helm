@@ -1,6 +1,6 @@
 # ABCDesktop helm package
 
-ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on https://www.abcdesktop.io/ for more informations.
+ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on https://www.abcdesktop.io/ to get more informations.
 
 ## To install
 
@@ -29,7 +29,7 @@ kubectl port-forward $(kubectl get pods -l run=router-od -o jsonpath={.items..me
 
 Open your web browser
 
-Open URL (http://localhost:30443)[http://localhost:30443] 
+Open URL [http://localhost:30443](http://localhost:30443) 
 
 
 ## ABCDesktop parameters
