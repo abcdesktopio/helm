@@ -109,7 +109,7 @@ speedtest:
   replicaCount: 1
   resources:
     limits:
-      cpu: 1
+      cpu: 0.5
       memory: 128Mi
     requests:
       cpu: 0.1
