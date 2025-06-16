@@ -12,7 +12,7 @@ console:
 
 memcached:
   image: memcached
-  tag: latest
+  tag: alpine
   replicaCount: 1
   resources:
     limits:
