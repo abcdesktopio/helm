@@ -46,7 +46,7 @@ The following table contains the helm parameters:
 | `console.resources.requests.cpu`      | CPU request                               | `0.1`                                       |
 | `console.resources.requests.memory`   | Memory request                            | `16Mi`                                      |
 | `memcached.image`                     | Docker image used for Memcached           | `ghcr.io/abcdesktopio/memcached`            |
-| `memcached.tag`                       | Docker image tag                          | `latest`                                    |
+| `memcached.tag`                       | Docker image tag                          | `alpine`                                    |
 | `memcached.replicaCount`              | Number of replicas                        | `1`                                         |
 | `memcached.resources.limits.cpu`      | CPU limit                                 | `0.2`                                       |
 | `memcached.resources.limits.memory`   | Memory limit                              | `64Mi`                                      |
