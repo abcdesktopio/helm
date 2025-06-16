@@ -105,7 +105,7 @@ router:
 
 speedtest:
   image: ghcr.io/librespeed/speedtest
-  tag: "latest"
+  tag: "master-alpine"
   replicaCount: 1
   resources:
     limits:
