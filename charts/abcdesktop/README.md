@@ -17,9 +17,9 @@ Install chart
 helm install my-abcdesktop abcdesktop/abcdesktop --version 4.0.0 --create-namespace -n abcdesktop
 ```
 
-Connect to the service
+## To connect
 
-When install your helm installation process is ready, you need to forward the pod's router tcp port 80 to your localhost port 30443 (for example)
+When install your helm installation process is ready, you need to forward the pod's router tcp port 80 to your localhost port `30443` (for example)
 
 ```
 LOCAL_PORT=30443
