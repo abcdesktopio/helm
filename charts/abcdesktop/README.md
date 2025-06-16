@@ -66,6 +66,11 @@ The following table contains the helm parameters:
 | `website.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
 | `website.resources.requests.cpu`      | CPU request                               | `0.1`                                       |
 | `website.resources.requests.memory`   | Memory request                            | `8Mi`                                       |
+| `website.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
+| `website.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
+| `website.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
+| `website.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `website.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `openldap.image`                      | Docker image for OpenLDAP                 | `ghcr.io/abcdesktopio/docker-test-openldap` |
 | `openldap.tag`                        | Docker image tag                          | `master`                                    |
 | `openldap.replicaCount`               | Number of replicas                        | `1`                                         |
@@ -80,6 +85,11 @@ The following table contains the helm parameters:
 | `pyos.resources.limits.memory`        | Memory limit                              | `2048Mi`                                    |
 | `pyos.resources.requests.cpu`         | CPU request                               | `0.5`                                       |
 | `pyos.resources.requests.memory`      | Memory request                            | `256Mi`                                     |
+| `pyos.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
+| `pyos.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
+| `pyos.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
+| `pyos.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `pyos.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `router.image`                        | Docker image for the router               | `ghcr.io/abcdesktopio/route`                |
 | `router.tag`                          | Docker image tag                          | `"4.0"`                                     |
 | `router.replicaCount`                 | Number of replicas                        | `1`                                         |
@@ -87,6 +97,11 @@ The following table contains the helm parameters:
 | `router.resources.limits.memory`      | Memory limit                              | `512Mi`                                     |
 | `router.resources.requests.cpu`       | CPU request                               | `0.25`                                      |
 | `router.resources.requests.memory`    | Memory request                            | `16Mi`                                      |
+| `router.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
+| `router.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
+| `router.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
+| `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `router.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `speedtest.image`                     | Docker image for the Speedtest service    | `ghcr.io/abcdesktopio/oc.speedtest`         |
 | `speedtest.tag`                       | Docker image tag                          | `"4.0"`                                     |
 | `speedtest.replicaCount`              | Number of replicas                        | `1`                                         |
