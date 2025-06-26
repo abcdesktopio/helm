@@ -32,5 +32,5 @@ spec:
             cpu: {{ .Values.openldap.resources.requests.cpu }}
             memory: {{ .Values.openldap.resources.requests.memory }}
         ports:
-          - containerPort: 10389
-          - containerPort: 10636
+          - containerPort: 389
+          - containerPort: 636

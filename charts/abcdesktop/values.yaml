@@ -1,6 +1,6 @@
 console:
   image: ghcr.io/abcdesktopio/console
-  tag: "4.0"
+  tag: "4.1"
   replicaCount: 1
   resources:
     limits:
@@ -23,7 +23,7 @@ memcached:
       memory: 16Mi
 
 mongo:
-  image: mongo
+  image: ghcr.io/abcdesktopio/mongo
   tag: "4.4"
   replicaCount: 1
   resources:
@@ -36,7 +36,7 @@ mongo:
 
 website:
   image: ghcr.io/abcdesktopio/oc.nginx
-  tag: "4.0"
+  tag: "4.1"
   replicaCount: 1
   resources:
     limits:
@@ -55,7 +55,7 @@ website:
 
 openldap:
   image: ghcr.io/abcdesktopio/docker-test-openldap
-  tag: master
+  tag: 4.1
   replicaCount: 1
   resources:
     limits:
@@ -67,7 +67,7 @@ openldap:
 
 pyos:
   image: ghcr.io/abcdesktopio/pyos
-  tag: "4.0"
+  tag: "4.1.alpine_latest"
   replicaCount: 1
   resources:
     limits:
@@ -82,11 +82,11 @@ pyos:
       minReplicas: 1
       maxReplicas: 100
       targetCPUUtilizationPercentage: 80
-      # targetMemoryUtilizationPercentage: 80      
+      # targetMemoryUtilizationPercentage: 80
 
 router:
   image: ghcr.io/abcdesktopio/route
-  tag: "4.0"
+  tag: "4.1"
   replicaCount: 1
   resources:
     limits:
@@ -117,7 +117,7 @@ speedtest:
 
 keysgenerator:
   image: ghcr.io/abcdesktopio/keysgenerator
-  tag: "4.0"
+  tag: "4.1"
   jwtdesktoppayloadkeylength: 1024
   jwtdesktopsigningkeylength: 1024
   jwtusersigningkeylength: 1024
@@ -365,6 +365,9 @@ od_config: |
         'providers'   : {
             'anonymous': {
               'displayname': 'Anonymous',
+              'textcolor': 'black',
+              'backgroundcolor': '#FFFFFF',
+              'icon': 'img/auth/anonymous_icon.svg',
               'caption': 'Have a look !',
               'userid': 'anonymous',
               'username': 'Anonymous',
