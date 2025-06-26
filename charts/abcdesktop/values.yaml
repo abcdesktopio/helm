@@ -24,7 +24,7 @@ memcached:
 
 mongo:
   image: ghcr.io/abcdesktopio/mongo
-  tag: "4.4"
+  tag: "safemain"
   replicaCount: 1
   resources:
     limits:

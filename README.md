@@ -53,7 +53,7 @@ The following table contains the helm parameters:
 | `memcached.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `memcached.resources.requests.memory` | Memory request                            | `16Mi`                                      |
 | `mongo.image`                         | Docker image for MongoDB                  | `ghcr.io/abcdesktopio/mongo`                |
-| `mongo.tag`                           | Docker image tag                          | `"4.4"`                                     |
+| `mongo.tag`                           | Docker image tag                          | `"safemain"`                                |
 | `mongo.replicaCount`                  | Number of replicas                        | `1`                                         |
 | `mongo.resources.limits.cpu`          | CPU limit                                 | `0.5`                                       |
 | `mongo.resources.limits.memory`       | Memory limit                              | `512Mi`                                     |
