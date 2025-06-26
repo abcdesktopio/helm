@@ -8,5 +8,4 @@ icon: https://www.abcdesktop.io/img/abcdesktop.svg
 
 annotations:
   artifacthub.io/signKey: |
-    fingerprint: 0x351794CC
     url: http://keyserver1.pgp.com/vkd/DownloadKey.event?keyid=0xD765E44E351794CC
