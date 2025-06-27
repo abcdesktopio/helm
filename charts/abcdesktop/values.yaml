@@ -118,9 +118,9 @@ speedtest:
 keysgenerator:
   image: ghcr.io/abcdesktopio/keysgenerator
   tag: "4.1"
-  jwtdesktoppayloadkeylength: 1024
-  jwtdesktopsigningkeylength: 1024
-  jwtusersigningkeylength: 1024
+  jwtdesktoppayloadkeylength: 2048
+  jwtdesktopsigningkeylength: 2048
+  jwtusersigningkeylength: 2048
 
 od_config: |
     # od.config
