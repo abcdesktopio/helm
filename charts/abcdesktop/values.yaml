@@ -477,8 +477,6 @@ od_config: |
     # memcacheserver: 'localhost'
     # memcacheserver: 'memcached'
     # memcacheserver: 'memcached.abcdesktop.svc.cluster.local'
-    #
-    #
     # memcachedport is the tcp port of the memcached server
     # the default value is 11211
     # memcachedport: 11211
