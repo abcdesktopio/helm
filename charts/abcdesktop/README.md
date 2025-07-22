@@ -25,11 +25,11 @@ When install your helm installation process is ready, you need to forward the po
 LOCAL_PORT=30443
 NAMESPACE=abcdesktop
 kubectl port-forward $(kubectl get pods -l run=router-od -o jsonpath={.items..metadata.name} -n ${NAMESPACE} ) --address 0.0.0.0 "${LOCAL_PORT}:80" -n ${NAMESPACE}
-``` 
+```
 
 Open your web browser
 
-Open URL [http://localhost:30443](http://localhost:30443) 
+Open URL [http://localhost:30443](http://localhost:30443)
 
 
 ## ABCDesktop parameters
@@ -103,7 +103,7 @@ The following table contains the helm parameters:
 | `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
 | `router.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `speedtest.image`                     | Docker image for the Speedtest service    | `ghcr.io/abcdesktopio/oc.speedtest`         |
-| `speedtest.tag`                       | Docker image tag                          | `"4.1"`                                     |
+| `speedtest.tag`                       | Docker image tag                          | `"main"`                                    |
 | `speedtest.replicaCount`              | Number of replicas                        | `1`                                         |
 | `speedtest.resources.limits.cpu`      | CPU limit                                 | `1`                                         |
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |

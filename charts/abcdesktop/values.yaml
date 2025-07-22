@@ -104,8 +104,8 @@ router:
       # targetMemoryUtilizationPercentage: 80
 
 speedtest:
-  image: ghcr.io/librespeed/speedtest
-  tag: "master-alpine"
+  image: ghcr.io/abcdesktopio/oc.speedtest
+  tag: "main"
   replicaCount: 1
   resources:
     limits:
@@ -143,18 +143,18 @@ od_config: |
     # same commands in one line
     # kubectl create -n abcdesktop configmap abcdesktop-config --from-file=od.config -o yaml --dry-run=client | kubectl replace -n abcdesktop -f -
     #
-    # to restart pyos 
+    # to restart pyos
     # quick and dirty
     # kubectl delete pods -l run=pyos-od -n abcdesktop
-    # or rollout 
+    # or rollout
     # kubectl rollout restart deployment pyos-od -n abcdesktop
     #
-    # to detect non-ASCII characters in file 
+    # to detect non-ASCII characters in file
     # perl -ne 'if (/[^[:ascii:]]/) { print $. . ": " . $_ }' od.config
     #######
 
 
-    # data 
+    # data
     [global]
 
     # abcdesktop is the default namespace
@@ -162,7 +162,7 @@ od_config: |
     # in most case, you don't need to override the environment variable POD_NAMESPACE
     # namespace: 'abcdesktop'
 
-    # DEFAULT HOST URL 
+    # DEFAULT HOST URL
     # public host url of the service
     # change this with your URL or
     # set the external URL service if you use a reverse proxy
@@ -179,7 +179,7 @@ od_config: |
 
 
     # WEBSOCKETROUTING
-    # describe which url is returned by od.py to reach the WebSocket server 
+    # describe which url is returned by od.py to reach the WebSocket server
     # the more secured value is default_host_url
     # websocketrouting: permit value are ['bridge', 'default_host_url', 'host','http_origin']
     # websocketrouting describe how the web browser can establish web socket to the user container
@@ -199,14 +199,14 @@ od_config: |
 
     # BIND_SECTION
     #
-    # od.py need an ip address and tcp port to listen 
-    # ip addr to listen is set by default to 0.0.0.0  
+    # od.py need an ip address and tcp port to listen
+    # ip addr to listen is set by default to 0.0.0.0
     # this option is only used if you run od.py without a docker container
     # this option is only used for developers
-    # if you run abcdesktop.io in a container, 
+    # if you run abcdesktop.io in a container,
     # the common usage, keep the default value to 0.0.0.0
-    server.socket_host: '0.0.0.0' 
-    # TCP PORT 
+    server.socket_host: '0.0.0.0'
+    # TCP PORT
     # the default tcp port to listen is 8000
     # this tcp port is used by nginx to forward HTTP request to od.py
     # if you change the default TCP port value, you have to change it to the nginx config file
@@ -220,7 +220,7 @@ od_config: |
     # server.geolocation_ipaddr is only used to locate the external ip of the service
     # server.geolocation_ipaddr is used by geoip and Active Directory site subnet queries
     # the default value is a dummy value '127.0.0.1'
-    # change this value to help geoip to locate your service or for Active Directory site and subnet query 
+    # change this value to help geoip to locate your service or for Active Directory site and subnet query
     server.geolocation_ipaddr: '127.0.0.1'
     # END OF EXTERNAL IP ADDRESS SECTION
 
@@ -234,21 +234,21 @@ od_config: |
       'jwtuserpublickeyfile' : '/config.usersigning/abcdesktop_jwt_user_signing_public_key.pem' }
     #
     # JWT RSA SIGNING ANS PAYLOAD KEYS
-    # od.py use two RSA keys to sign jwt and encrypt payload's jwt  
+    # od.py use two RSA keys to sign jwt and encrypt payload's jwt
     # Use OpenSSL to generate the RSA Keys
     #
-    # command to build rsa kay pairs for jwt payload 
+    # command to build rsa kay pairs for jwt payload
     # 512 bits is a small value, change here if need
     # >openssl genrsa  -out abcdesktop_jwt_desktop_payload_private_key.pem 512
     # >openssl rsa     -in  abcdesktop_jwt_desktop_payload_private_key.pem -outform PEM -pubout -out  _abcdesktop_jwt_desktop_payload_public_key.pem
     # >openssl rsa -pubin -in _abcdesktop_jwt_desktop_payload_public_key.pem -RSAPublicKey_out -out abcdesktop_jwt_desktop_payload_public_key.pem
     #
-    # command build rsa kay pairs for jwt signing 
+    # command build rsa kay pairs for jwt signing
     # >openssl genrsa -out abcdesktop_jwt_desktop_signing_private_key.pem 1024
     # >openssl rsa     -in abcdesktop_jwt_desktop_signing_private_key.pem -outform PEM -pubout -out abcdesktop_jwt_desktop_signing_public_key.pem
     #
-    # ! IMPORTANT 
-    # ! the same key files are used by nginx 
+    # ! IMPORTANT
+    # ! the same key files are used by nginx
     # ! you have to copy the key file to nginx container image
     #
     jwt_token_desktop : {
@@ -263,7 +263,7 @@ od_config: |
     controllers: { 'ManagerController': { 'permitip': [ '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', 'fd00::/8', '169.254.0.0/16', '127.0.0.0/8' ] },
                   'StoreController':   { 'wrapped_key': {} },
                   'ComposerController' : { 'requestsallowed' : { 'getdesktopdescription': False } },
-                  'DesktopController' :  { 'requestsallowed' : { 'dns': False }, 'permitip': [  '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', 'fd00::/8', '169.254.0.0/16', '127.0.0.0/8' ] } } 
+                  'DesktopController' :  { 'requestsallowed' : { 'dns': False }, 'permitip': [  '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', 'fd00::/8', '169.254.0.0/16', '127.0.0.0/8' ] } }
     # END OF CONTROLLERS SECTION #
 
     ### AUTH SECTION ###
@@ -284,10 +284,10 @@ od_config: |
     # external: use for OAuth 2.0 Authentification
     # 'external': {
     #    'providers': {
-    #      'google': { 
-    #        'displayname': 'Google', 
+    #      'google': {
+    #        'displayname': 'Google',
     #        'enabled': True,
-    #        'client_id': 'YYYYYY', 
+    #        'client_id': 'YYYYYY',
     #        'client_secret': 'XXXXXX',
     #        'scope': 'https://www.googleapis.com/auth/userinfo.email',
     #        'dialog_url': 'https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&redirect_uri={callback_url}&response_type=code&scope={scope}',
@@ -302,13 +302,13 @@ od_config: |
     # 'explicit': {
     #    'show_domains': True,
     #    'providers': {
-    #      'LDAP': { 
-    #        'config_ref': 'ldapconfig', 
+    #      'LDAP': {
+    #        'config_ref': 'ldapconfig',
     #        'enabled': True
     #       }
     # }}
-    # ldapconfig : { 'planet': {    
-    #                        'default'       : True, 
+    # ldapconfig : { 'planet': {
+    #                        'default'       : True,
     #                        'ldap_timeout'  : 15,
     #                        'ldap_protocol' : 'ldap',
     #                        'ldap_basedn'   : 'ou=people,dc=planetexpress,dc=com',
@@ -320,12 +320,12 @@ od_config: |
     # 'explicit': {
     #    'show_domains': True,
     #    'providers': {
-    #      'AD': { 
-    #        'config_ref': 'adconfig', 
+    #      'AD': {
+    #        'config_ref': 'adconfig',
     #        'enabled': True
     #       }
     # }
-    # adconfig : { 'AD': {  'default'       : True, 
+    # adconfig : { 'AD': {  'default'       : True,
     #                       'ldap_timeout'  : 15,
     #                       'ldap_protocol' : 'ldap',
     #                       'ldap_basedn'   : 'DC=ad,DC=domain,DC=local',
@@ -346,19 +346,19 @@ od_config: |
     #        'caption': 'Have a look !',
     #        'userid': 'anonymous',
     #        'username': 'Anonymous'
-    #      }     
+    #      }
     #    }
     authmanagers: {
       'external': {
         'providers': {}
       },
-      'metaexplicit': {}, 
+      'metaexplicit': {},
       'explicit': {
         'show_domains': True,
-        'providers'   : { 
-      'planet': { 
-        'config_ref': 'ldapconfig',  
-        'enabled': True } 
+        'providers'   : {
+      'planet': {
+        'config_ref': 'ldapconfig',
+        'enabled': True }
       }
       },
       'implicit': {
@@ -371,10 +371,10 @@ od_config: |
               'caption': 'Have a look !',
               'userid': 'anonymous',
               'username': 'Anonymous',
-              'policies': { 
+              'policies': {
                 'acl'   : { 'permit': [ 'all' ] },
-                'rules' : { 
-                  'rule-net-home': {  
+                'rules' : {
+                  'rule-net-home': {
                     'conditions' : [ { 'network': '10.0.0.0/8', 'expected' : True } ],
                     'expected'   : True,
                     'label'      : 'tennetwork'
@@ -415,20 +415,20 @@ od_config: |
                             }
                     } } }
 
-    # For external provider only 
+    # For external provider only
     # OAuthLib params
     # source https://oauthlib.readthedocs.io/en/latest/oauth2/security.html
     #
-    # OAuthLib will raise an InsecureTransportError if you attempt to use OAuth2 over HTTP, rather than HTTPS. 
-    # Setting this environment variable will prevent this error from being raised. 
+    # OAuthLib will raise an InsecureTransportError if you attempt to use OAuth2 over HTTP, rather than HTTPS.
+    # Setting this environment variable will prevent this error from being raised.
     # This is mostly useful for local testing, or automated tests.
-    # If you set the OAUTHLIB_INSECURE_TRANSPORT environment variable, it will not check for secure HTTPS, 
-    # and allow the OAuth dance to continue whether or not it is secure. 
-    # Disabling this check is intended only for development, not for production 
+    # If you set the OAUTHLIB_INSECURE_TRANSPORT environment variable, it will not check for secure HTTPS,
+    # and allow the OAuth dance to continue whether or not it is secure.
+    # Disabling this check is intended only for development, not for production
     # in production, you must configure secure HTTPS to make sure communication happen securely.
     OAUTHLIB_INSECURE_TRANSPORT: True
     #
-    # Prevent "Scope has changed" warning 
+    # Prevent "Scope has changed" warning
     # requests_oauthlib library this generates a Warning, rather than an Exception
     # If a user only approved read only scope but the code is now using different scope.
     # when a scope mismatch occurs, user must be prompted to reauthorize via oauth.
@@ -486,15 +486,15 @@ od_config: |
     # mongodb url
     # describe how od.py can reach the mongodb server
     # mongodburi is the URI name of the mongodb server
-    # the same var name mongodbserver support connection string URI format 
-    # read https://docs.mongodb.com/manual/reference/connection-string/#mongodb-uri 
+    # the same var name mongodbserver support connection string URI format
+    # read https://docs.mongodb.com/manual/reference/connection-string/#mongodb-uri
     # the format is:
     # mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
     # mongodburl SHOULD BE SET TO None
     # od.py build the default :
     #     in standalone mode the build value is 'mongodb://mongodb:27017'
     #     in kubernetes mode the build value is 'mongodb://mongodb.abcdesktop.svc.cluster.local:27017'
-    # change it if you need or if you have to run od.py in developer env 
+    # change it if you need or if you have to run od.py in developer env
     # mongodburl: None
     # mongodburl: 'mongodb://localhost:27017'
     # mongodburl: 'mongodb://pyos:Az4MeYWUjZDg4Zjhk@mongodb.abcdesktop.svc.cluster.local:32017'
@@ -504,36 +504,36 @@ od_config: |
 
     # LANGUAGE SECTION
     # list of default supported language on oc.user images
-    # this option is used for filter request.headers.get('Accept-Language') 
+    # this option is used for filter request.headers.get('Accept-Language')
     # user container image MUST have the supported language packages installed
-    # else the default fallback language is en_US 
+    # else the default fallback language is en_US
     # by default abcdesktop oc.user image embeded languages support [ 'German', 'English', 'French' ]
     # de_* - German - GERMANY (DE) (de_DE)
     # en_* - English - UNITED KINGDOM (GB) (en_GB) - UNITED STATES OF AMERICA (US) (en_US)
     # fr_* - French - FRANCE (FR) (fr_FR)
-    # to add new supported languages update oc.user's Dockerfile commands 
+    # to add new supported languages update oc.user's Dockerfile commands
     # repository https://github.com/abcdesktopio/oc.user
     #
     # RUN apt-get update && \
     #     apt-get install -y --no-install-recommends locales language-pack-en language-pack-fr language-pack-de && \
     #     locale-gen && apt-get clean && rm -rf /var/lib/apt/lists/*
-    # 
-    # 
+    #
+    #
     language : [  'de_AT', 'de_BE', 'de_CH', 'de_DE', 'de_LI', 'de_LU', 'en_AG', 'en_AU', 'en_BW', 'en_CA', 'en_DK', 'en_GB', 'en_HK', 'en_IE', 'en_IN', 'en_NG', 'en_NZ', 'en_PH', 'en_SG', 'en_US', 'en_ZA', 'en_ZM', 'en_ZW',  'fr_BE', 'fr_CA', 'fr_CH', 'fr_FR', 'fr_LU' ]
     # END OF LANGUAGE SECTION
 
 
-    # WebRTC configuration 
+    # WebRTC configuration
     #
     #
     webrtc.enable : False # by default no sound
     #
     # webrtc.rtc_constraints
     # webrtc.rtc_constraints: { 'video': False, 'audio': True }
-    # For both video and audio, its value is either a boolean or an object. 
-    # define if 'audio' should be send using the user's microphone, the default value is True 
+    # For both video and audio, its value is either a boolean or an object.
+    # define if 'audio' should be send using the user's microphone, the default value is True
     # keep in mind that a user can refuse local microphone access
-    # define if 'video' should be send using the user's webcam, the default value is False 
+    # define if 'video' should be send using the user's webcam, the default value is False
     # keep in mind that a user can refuse local camera access
     #
     # This value is used by navigator.mediaDevices.getUserMedia(rtc_constraints)
@@ -542,7 +542,7 @@ od_config: |
     webrtc.rtc_constraints: { 'video': False, 'audio': True }
     # END OF WebRTC SECTION
 
-    # K8S TIMEOUT 
+    # K8S TIMEOUT
     # Kubernetes timeout
     # default timeout to bound a persistentVolumeClaim
     K8S_BOUND_PVC_TIMEOUT_SECONDS: 60
@@ -559,7 +559,7 @@ od_config: |
 
     #
     # Application execute class defined
-    # define some executeclasses name with 
+    # define some executeclasses name with
     # resources requests and limits value
     # then map executeclasses to application
     executeclasses : {
@@ -567,7 +567,7 @@ od_config: |
         'description': '1 CPU cores and 2Gi',
         'nodeSelector':None,
         'resources':{
-          'requests':{'memory':"64Mi",'cpu':"100m"},       
+          'requests':{'memory':"64Mi",'cpu':"100m"},
           'limits':  {'memory':"2Gi",'cpu':"1000m"}
         }
       },
@@ -575,7 +575,7 @@ od_config: |
         'description': '1 core / 2 Gi / 0 GPU',
         'nodeSelector':None,
         'resources':{
-          'requests':{'memory':"64Mi",'cpu':"100m"},       
+          'requests':{'memory':"64Mi",'cpu':"100m"},
           'limits':  {'memory':"2Gi",'cpu':"1000m"}
         }
       },
@@ -583,7 +583,7 @@ od_config: |
         'description': '2 cores / 4 Gi / 1 GPU',
         'nodeSelector':None,
         'resources':{
-          'requests':{'memory':"64Mi",'cpu':"100m"},       
+          'requests':{'memory':"64Mi",'cpu':"100m"},
           'limits':  {'memory':"4Gi",'cpu':"2000m", 'nvidia.com/gpu':'1' }
         }
       },
@@ -591,35 +591,35 @@ od_config: |
         'description': '4 cores / 8 Gi / 1 GPU',
         'nodeSelector':None,
         'resources':{
-          'requests':{'memory':"128Mi",'cpu':"100m"},       
+          'requests':{'memory':"128Mi",'cpu':"100m"},
           'limits':{'memory':"8Gi",'cpu':"4000m", 'nvidia.com/gpu':'1' } } } }
 
     # features_permissions
     # read executeclasses and permit a user to set a dedicated class name as desktop features
     # 'read' features_permissions is exposed to the frontend
     # 'submit' features_permissions can be set to create a desktop
-    # 
+    #
     # desktop.features_permissions : [ 'read', 'submit' ]
 
     #
     # where autogenerated files: passwd shadow group gshadow
     #
     # mount localaccount secrets in desktop['secretslocalaccount'] eq: /etc/localaccount
-    # oc.user container image and applcations use a symbolic link to 
-    # - /etc/passwd -> desktop['secretslocalaccount']/passwd 
-    # - /etc/shadow -> desktop['secretslocalaccount']/shadow 
-    # - /etc/group  -> desktop['secretslocalaccount']/group 
-    # - /etc/gshadow -> desktop['secretslocalaccount']/gshadow 
+    # oc.user container image and applcations use a symbolic link to
+    # - /etc/passwd -> desktop['secretslocalaccount']/passwd
+    # - /etc/shadow -> desktop['secretslocalaccount']/shadow
+    # - /etc/group  -> desktop['secretslocalaccount']/group
+    # - /etc/gshadow -> desktop['secretslocalaccount']/gshadow
     # files are linked to desktop['secretslocalaccount']
     desktop.secretslocalaccount : '/etc/localaccount'
 
     desktop.appendpathtomounthomevolume: ''
 
-    desktop.pod : { 
+    desktop.pod : {
       # default spec for all containers
       # can be overwritten on dedicated container spec
       # value inside mustrache like {{ uidNumber }} is replaced by context run value
-      # for example {{ uidNumber }} is the uid number define in ldap server 
+      # for example {{ uidNumber }} is the uid number define in ldap server
       'spec' : {
         'shareProcessNamespace': False,
         'shareProcessMemory': True,
@@ -652,96 +652,96 @@ od_config: |
         'pulseaudiosocket':  { 'name': 'pulseaudiosocket',  'mountPath': '/tmp/.pulseaudio' },
         'cupsdsocket': { 'name': 'cupsdsocket',  'mountPath': '/tmp/.cupsd' }
       },
-      # graphical is the main abcdesktop container 
-      # include x11 service 
+      # graphical is the main abcdesktop container
+      # include x11 service
       'graphical' : {
         'image': { 'default': 'ghcr.io/abcdesktopio/oc.user.ubuntu.sudo.24.04:4.1' },
         'imagePullPolicy':  'Always',
         'enable': True,
         'acl':  { 'permit': [ 'all' ] },
         'waitportbin' : '/composer/node/wait-port/node_modules/.bin/wait-port',
-        'resources': { 
+        'resources': {
           'requests': { 'memory': "256Mi", 'cpu': "100m"  },
-          'limits'  : { 'memory': "4Gi",   'cpu': "2000m" } 
+          'limits'  : { 'memory': "4Gi",   'cpu': "2000m" }
         },
         'securityContext': {
-          'readOnlyRootFilesystem': False, 
+          'readOnlyRootFilesystem': False,
           'allowPrivilegeEscalation': True
         },
         'tcpport': 6081,
         'secrets_requirement' : [ 'abcdesktop/vnc', 'abcdesktop/kerberos'],
         'waitfor_services' : [ 'xserver', 'novnc', 'spawner-service', 'plasmashell' ],
-        'waitfor_processes' : [ 'kwin_x11', 'plasmashell', 'kactivitymanagerd', 'kded5' ], 
+        'waitfor_processes' : [ 'kwin_x11', 'plasmashell', 'kactivitymanagerd', 'kded5' ],
         'waitfor_listeningservices': [ 'graphical', 'spawner' ]
       },
       # spawner core service to configure desktop
-      # run inside graphical container  
-      'spawner' : { 
+      # run inside graphical container
+      'spawner' : {
         'enable': True,
         'tcpport': 29786,
         'waitportbin' : '/composer/node/wait-port/node_modules/.bin/wait-port',
-        'acl':  { 'permit': [ 'all' ] } 
+        'acl':  { 'permit': [ 'all' ] }
       },
       # broadcast core service for notification
-      # run inside graphical container  
-      'broadcast' : { 
+      # run inside graphical container
+      'broadcast' : {
         'enable': True,
         'tcpport': 29784,
-        'acl':  { 'permit': [ 'all' ] } 
+        'acl':  { 'permit': [ 'all' ] }
       },
-      # webshell is no a container, just a service 
-      # run inside graphical container  
+      # webshell is no a container, just a service
+      # run inside graphical container
       # usefull to debug application and troubleshooting
-      'webshell' : { 
+      'webshell' : {
         'enable': True,
         'tcpport': 29781,
-        'acl':  { 'permit': [ 'all' ] } 
+        'acl':  { 'permit': [ 'all' ] }
       },
       # container printer
-      # printer is a cupsd service 
-      'printer' : { 
+      # printer is a cupsd service
+      'printer' : {
         'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.1',
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
         'tcpport': 681,
         'securityContext': { 'runAsUser': 0, 'runAsGroup': 0 },
-        'resources': { 
-          'requests': { 'memory': "32Mi", 'cpu': "5m" },  
-          'limits'  : { 'memory': "512Mi",  'cpu': "200m" } 
+        'resources': {
+          'requests': { 'memory': "32Mi", 'cpu': "5m" },
+          'limits'  : { 'memory': "512Mi",  'cpu': "200m" }
         },
-        'acl':  { 'permit': [ 'all' ] } 
+        'acl':  { 'permit': [ 'all' ] }
       },
       # allow to download file in the printer queue
       # use to print file from the web browser
-      # printerfile is no a container, just a service 
-      'printerfile' : { 
+      # printerfile is no a container, just a service
+      'printerfile' : {
         'enable': True,
         'tcpport': 29782,
-        'acl':  { 'permit': [ 'all' ] } 
+        'acl':  { 'permit': [ 'all' ] }
       },
       # container filer
       # filer provide upload and download files features
-      'filer' : { 
+      'filer' : {
         'image': 'ghcr.io/abcdesktopio/oc.filer:4.1',
         'imagePullPolicy':  'IfNotPresent',
         'enable': True,
         'tcpport': 29783,
         'resources': {
-          'requests': { 'memory': "16Mi", 'cpu': "5m" },  
-          'limits'  : { 'memory': "256Mi",'cpu': "100m" } 
+          'requests': { 'memory': "16Mi", 'cpu': "5m" },
+          'limits'  : { 'memory': "256Mi",'cpu': "100m" }
         },
         'acl':  { 'permit': [ 'all' ] }
         },
       # container storage
       # storage is just a pause go get all volumes
-      'storage' : { 
+      'storage' : {
         'image': 'k8s.gcr.io/pause:3.8',
         'imagePullPolicy':  'IfNotPresent',
         'enable': True,
         'acl': { 'permit': [ 'all' ] },
-        'resources': { 
-          'requests': { 'memory': "8Mi",  'cpu': "5m" },  
-          'limits'  : { 'memory': "32Mi", 'cpu': "5m" } 
+        'resources': {
+          'requests': { 'memory': "8Mi",  'cpu': "5m" },
+          'limits'  : { 'memory': "32Mi", 'cpu': "5m" }
         }
       },
       # container sound
@@ -749,60 +749,60 @@ od_config: |
       # can forword sound to webrtc gateway or as http stream
       # http stream can have glitch and does not proviede image and sound sync
       # webrtc gateway with rtp sound stream is better
-      'sound': { 
+      'sound': {
         'image': 'ghcr.io/abcdesktopio/oc.pulseaudio:4.1',
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
         'tcpport': 29788,
         'acl':  { 'permit': [ 'all' ] },
-        'resources': { 
-          'requests': { 'memory': "32Mi",  'cpu': "50m"  },  
-          'limits'  : { 'memory': "256Mi", 'cpu': "500m" } 
-        } 
+        'resources': {
+          'requests': { 'memory': "32Mi",  'cpu': "50m"  },
+          'limits'  : { 'memory': "256Mi", 'cpu': "500m" }
+        }
       },
       # container init
       # a simple busybox to chowner and chmod of homedir
       # by defaul homedir belongs to root
-      'init': { 
+      'init': {
         'image': 'busybox',
         'enable': True,
         'imagePullPolicy': 'IfNotPresent',
         'securityContext': { 'runAsUser': 0 },
         'acl':  { 'permit': [ 'all' ] },
-        'resources': { 
-          'requests': { 'memory': "8Mi",  'cpu': "5m"  },  
-          'limits'  : { 'memory': "64Mi", 'cpu': "100m" } 
-        }, 
-        'command':  [ 'sh', '-c',  'chmod 750 ~ && chown {{ uidNumber }}:{{ gidNumber }} ~' ] 
+        'resources': {
+          'requests': { 'memory': "8Mi",  'cpu': "5m"  },
+          'limits'  : { 'memory': "64Mi", 'cpu': "100m" }
+        },
+        'command':  [ 'sh', '-c',  'chmod 750 ~ && chown {{ uidNumber }}:{{ gidNumber }} ~' ]
       },
-      # 
+      #
       # container x11overlay
       # uncomment this section to add wartermarking on X11 display
       # it creates a X11 window stay on top as root
-      # 'x11overlay': { 
+      # 'x11overlay': {
       #  'image': 'abcdesktopio/x11-overlay:main',
       #  'pullpolicy': 'IfNotPresent',
       #  'enable': True,
       #  'securityContext': { 'runAsUser':   0, 'runAsGroup':  0  },
       #  'acl':  { 'permit': [ 'all' ] },
-      #  'resources': { 
-      #      'requests': { 'memory': "12Mi", 'cpu': "50m"  },  
-      #      'limits'  : { 'memory': "64Mi", 'cpu': '500m"  } 
-      #  } 
+      #  'resources': {
+      #      'requests': { 'memory': "12Mi", 'cpu': "50m"  },
+      #      'limits'  : { 'memory': "64Mi", 'cpu': '500m"  }
+      #  }
       # },
-      # application can run 
-      # as ephemeral_container 
+      # application can run
+      # as ephemeral_container
       # ephemeral_container are binded to graphical_container
       # as pod_application
       # pod_application run as pod
-      # 
+      #
       'ephemeral_container': {
         'enable': True,
         'acl':  { 'permit': [ 'all' ] },
-        'securityContext': { 
+        'securityContext': {
             'supplementalGroups': [ '{{ supplementalGroups }}' ] ,
-            'readOnlyRootFilesystem': False, 
-            'allowPrivilegeEscalation': True, 
+            'readOnlyRootFilesystem': False,
+            'allowPrivilegeEscalation': True,
             'runAsUser':'{{ uidNumber }}',
             'runAsGroup':'{{ gidNumber }}'
         }
@@ -823,25 +823,25 @@ od_config: |
     desktop.policies: { 'rules': { } }
 
     #
-    # desktop.homedirectorytype define how to create user's homedirectory 
+    # desktop.homedirectorytype define how to create user's homedirectory
     #
-    # if desktop.homedirectorytype is set to None, the homedirectory volume is an empty dir 
+    # if desktop.homedirectorytype is set to None, the homedirectory volume is an empty dir
     # { 'name': volume_home_name, 'emptyDir': {} }
     #
-    # if desktop.homedirectorytype is set to 'hostPath', the homedirectory volume is a hostpath 
+    # if desktop.homedirectorytype is set to 'hostPath', the homedirectory volume is a hostpath
     # and read the desktop.hostPathRoot value
     # { name':volume_home_name, 'hostPath': { 'path': desktop.hostPathRoot + '/' + subpath_name, 'type':'DirectoryOrCreate' }  }
     #
-    # if desktop.homedirectorytype is set to 'persistentVolumeClaim', the homedirectory volume is a 'persistentVolumeClaim' 
+    # if desktop.homedirectorytype is set to 'persistentVolumeClaim', the homedirectory volume is a 'persistentVolumeClaim'
     # and read the desktop.persistentvolumeclaim value
-    # read https://www.abcdesktopio.io/3.1/config/persistentvolumes/ to get more informations about pv and pvc 
+    # read https://www.abcdesktopio.io/3.1/config/persistentvolumes/ to get more informations about pv and pvc
     #
     # values can be :
-    # desktop.homedirectorytype: None 
-    # desktop.homedirectorytype: 'persistentVolumeClaim' 
+    # desktop.homedirectorytype: None
+    # desktop.homedirectorytype: 'persistentVolumeClaim'
     # desktop.homedirectorytype: 'hostPath'
     # desktop.homedirectorytype: 'hostPath'
-    desktop.homedirectorytype: None  # use a empty dir 
+    desktop.homedirectorytype: None  # use a empty dir
 
 
     #
@@ -854,9 +854,9 @@ od_config: |
     # for desktop.homedirectorytype: 'persistentVolumeClaim'
     # if desktop.homedirectorytype is set to persistentVolumeClaim
     # replace mystorageclass by your own storageClassName
-    # 
+    #
     # desktop.homedirectorytype: 'persistentVolumeClaim'
-    # 
+    #
     # desktop.persistentvolume: {
     #            'metadata': { 'name': '{{ provider }}-{{ userid }}-{{ uuid }}' },
     #            'spec': {
@@ -883,10 +883,10 @@ od_config: |
     #            'spec': {
     #              'volumeName': '{{ provider }}-{{ userid }}-{{ uuid }}',
     #              'storageClassName': 'nfs-csi',
-    #              'resources': { 
-    #                'requests': { 
+    #              'resources': {
+    #                'requests': {
     #                  'storage': '1Gi'
-    #                } 
+    #                }
     #            },
     #            'accessModes': [ 'ReadWriteOnce' ] } }
     #
@@ -896,13 +896,13 @@ od_config: |
     # desktop.nodeselector
     # This option permits to assign user pods to nodes
     #
-    # - dict : 
-    # description: It specifies a map of key-value pairs. 
-    # For the pod to be eligible to run on a node, the node must have each of the indicated key-value pairs as labels  (it can have additional labels as well). 
+    # - dict :
+    # description: It specifies a map of key-value pairs.
+    # For the pod to be eligible to run on a node, the node must have each of the indicated key-value pairs as labels  (it can have additional labels as well).
     # The most common usage is one key-value pair.
-    # On the cluster set label to node 
+    # On the cluster set label to node
     # kubectl label node YOURNODE abcdesktoprole=worker
-    # for example 
+    # for example
     # desktop.nodeselector : { 'abcdesktoprole': 'worker' }
     desktop.nodeselector: {}
 
@@ -912,7 +912,7 @@ od_config: |
     # use ClusterRoleBinding and ClusterRole
     # if pyos-service account does NOT have ClusterRole image pulling is not guarantee
     #
-    # the default service account role is RoleBinding 
+    # the default service account role is RoleBinding
     # set at https://raw.githubusercontent.com/abcdesktopio/conf/main/kubernetes/rbac-role.yaml
     #
 
@@ -920,9 +920,9 @@ od_config: |
     #
     # /composer/overwrite_environment_variable_for_application.sh
     # This script is hosted by the pod in the graphical container.
-    # overwrite_environment_variable_for_application.sh must return a list of dict 
-    # Then a application starts ( it can be 'ephemeral_container' or 'pod_application' ), 
-    # if desktop.overwrite_environment_variable_for_application is set to a string, 
+    # overwrite_environment_variable_for_application.sh must return a list of dict
+    # Then a application starts ( it can be 'ephemeral_container' or 'pod_application' ),
+    # if desktop.overwrite_environment_variable_for_application is set to a string,
     # then pyos execute the script and expect for a list of dict ( json formatted )
     #  ./overwrite_environment_variable_for_application.sh
     # [ { "SAMPLE_ENV_VAR_NAME" : "samplevalue" } ]
@@ -930,34 +930,34 @@ od_config: |
     # The defautl value for desktop.overwrite_environment_variable_for_application is None
     # desktop.overwrite_environment_variable_for_application : "/composer/overwrite_environment_variable_for_application.sh"
 
-    # Add default environment vars 
-    # desktop.envlocal is a dictionary. 
+    # Add default environment vars
+    # desktop.envlocal is a dictionary.
     # desktop.envlocal contains a (key,value) added by default as environment variables to oc.user.
     # Only static variables are defined here.
-    # Dynamics values are set by python code 
+    # Dynamics values are set by python code
     #
     desktop.envlocal: { 'WEBSOCKIFY_HEARTBEAT':'30', 'LIBOVERLAY_SCROLLBAR':'0', 'UBUNTU_MENUPROXY':'0', 'X11LISTEN':'tcp', 'ABCDESKTOP_BG_COLOR': '#7fb3cf' }
 
-    # 
-    # to update session timeout 
-    # change WEBSOCKIFY_HEARTBEAT 
-    # use 'WEBSOCKIFY_HEARTBEAT':'30' 
+    #
+    # to update session timeout
+    # change WEBSOCKIFY_HEARTBEAT
+    # use 'WEBSOCKIFY_HEARTBEAT':'30'
     # the new WEBSOCKIFY_HEARTBEAT the value is in second
     # if you can't update the proxy-read-timeout and proxy-send-timeout
     # read https://github.com/abcdesktopio/oc.pyos/issues/2 to get more details
     #
     # desktop.envlocal: { 'LIBOVERLAY_SCROLLBAR':'0', 'UBUNTU_MENUPROXY':'0', 'X11LISTEN':'tcp', 'WEBSOCKIFY_HEARTBEAT':'30' }
 
-    # 
+    #
     # for demo or kiosk mode
     # remove all files in user's home directory
-    # add ['lifecycle'] = {   'preStop': { 'exec': { 'command': [ "/bin/bash", "-c", "rm -rf ~/{*,.*}" ] } } 
+    # add ['lifecycle'] = {   'preStop': { 'exec': { 'command': [ "/bin/bash", "-c", "rm -rf ~/{*,.*}" ] } }
     # to the graphical container
     desktop.removehomedirectory : False
 
-    # remove persistent volume default value 
+    # remove persistent volume default value
     desktop.removepersistentvolume: False
-    # remove persistent volume claim default value 
+    # remove persistent volume claim default value
     desktop.removepersistentvolumeclaim: False
 
 
@@ -972,7 +972,7 @@ od_config: |
     #   ENV BUSER balloon
     #   RUN groupadd --gid 4096 $BUSER
     #   RUN useradd --create-home --shell /bin/bash --uid 4096 -g $BUSER --groups lpadmin,sudo $BUSER
-    # 
+    #
     desktop.username : 'balloon'
     # default user id of desktop.username
     desktop.userid : 4096
@@ -983,7 +983,7 @@ od_config: |
     # END OF DESKTOP OPTIONS
 
 
-    # 
+    #
     # default dock config
     # dock option describes which default application are show by default
     # dock option is a dictionary
@@ -1003,10 +1003,10 @@ od_config: |
     #  },
     #
     # 'webshell'    :  HTML 5, terminal application based on xterm.js
-    # The values are parsed by javascript front  
-    # 
-    dock : {  
-      'webshell': { 
+    # The values are parsed by javascript front
+    #
+    dock : {
+      'webshell': {
         'name': u'WebShell',
         'acl': { 'permit': [ 'all' ] },
         'keyword': u'terminal,shell,webshell,bash,cmd',
@@ -1019,19 +1019,19 @@ od_config: |
         'icon': u'webshell.svg' } }
 
 
-    # FRONT START OPTIONS 
+    # FRONT START OPTIONS
 
     # welcomeinfo
-    # Show a welcome message to front for maintenance or whatever 
-    # welcomeinfo: { 
-    #  'welcome': [ 
-    #    { 'notbefore': '04 Dec 2023 00:12:00 GMT', 
-    #      'notafter':  '08 Dec 2023 00:12:00 GMT', 
-    #      'title': 'Platform scheduled maintenance', 
-    #      'information': 'Scheduled service maintenance from 04 Dec 2023 00:12:00 GMT to 08 Dec 2023 00:12:00 GMT.' 
+    # Show a welcome message to front for maintenance or whatever
+    # welcomeinfo: {
+    #  'welcome': [
+    #    { 'notbefore': '04 Dec 2023 00:12:00 GMT',
+    #      'notafter':  '08 Dec 2023 00:12:00 GMT',
+    #      'title': 'Platform scheduled maintenance',
+    #      'information': 'Scheduled service maintenance from 04 Dec 2023 00:12:00 GMT to 08 Dec 2023 00:12:00 GMT.'
     #    } ] }
 
-    # front zoom value 
+    # front zoom value
     # set <number> values
     # default is 1 render element at its normal size.
     # use document.body.style.zoom non-standard zoom CSS property can be used to control the magnification level of an element.
@@ -1040,27 +1040,27 @@ od_config: |
     # desktop.zoom: 0.7;
     desktop.zoom : 1
 
-    # front.menuconfig is a dictionary to show or hide menu entries 
-    # at the to rignt corner 
+    # front.menuconfig is a dictionary to show or hide menu entries
+    # at the to rignt corner
     # in front js
     # 'grabmouse': False,
     front.menuconfig  : { 'settings': True, 'appstore': True, 'screenshot':True, 'download': True, 'logout': True, 'disconnect': True }
 
     #
     # desktop.defaultbackgroundcolors
-    # list of string color 
+    # list of string color
     # example [ '#6EC6F0', '#333333' ]
     # The desktop.defaultbackgroundcolors allow you to change the desktop default background color.
-    # The default value is a list of string 
+    # The default value is a list of string
     # [ '#6EC6F0', '#333333', '#666666', '#CD3C14', '#4BB4E6', '#50BE87', '#A885D8', '#FFB4E6' ]
-    # The desktop.defaultbackgroundcolors length can contain up to 8 entries. 
+    # The desktop.defaultbackgroundcolors length can contain up to 8 entries.
     desktop.defaultbackgroundcolors : [ '#6EC6F0', '#333333', '#666666', '#CD3C14', '#4BB4E6', '#50BE87', '#A885D8', '#FFB4E6' ]
 
     # tips info
     # display a custom network information page
     tipsinfo : { 'networkmap': False }
 
-    # FRONT END OPTIONS 
+    # FRONT END OPTIONS
 
 
 
@@ -1068,7 +1068,7 @@ od_config: |
     # GEOLOCATION Geolocation
     # params used for https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
     # An optional object including the following parameters:
-    # 
+    #
     # maximumAge A positive long value indicating the maximum age in milliseconds of a possible cached position that is acceptable to return. If set to 0, it means that the device cannot use a cached position and must attempt to retrieve the real current position. If set to Infinity the device must return a cached position regardless of its age. Default: 0.
     # timeout A positive long value representing the maximum length of time (in milliseconds) the device is allowed to take in order to return a position. The default value is Infinity, meaning that getCurrentPosition() won't return until the position is available.
     # enableHighAccuracy A boolean value that indicates the application would like to receive the best possible results. If true and if the device is able to provide a more accurate position, it will do so. Note that this can result in slower response times or increased power consumption (with a GPS chip on a mobile device for example). On the other hand, if false, the device can take the liberty to save resources by responding more quickly and/or using less power. Default: false.
@@ -1077,26 +1077,26 @@ od_config: |
 
     #
     # LOGGING SECTION
-    # The logging configuration is a dictionnary object. 
+    # The logging configuration is a dictionnary object.
     # The logging configuration describes where and how log message information have to been send.
     # The syslog and graylog protocol messaging are supported too.
     # The default features for each handlers are :
     # handler Features
     # stdout log message using a StreamHandler to the stream: ext://sys.stdout formatted as standard
     # stderr log message using a StreamHandler to the stream: ext://sys.stderr formatted as standard
-    # trace  log message using a RotatingFileHandler to the file logs/trace.log formatted as standard 
+    # trace  log message using a RotatingFileHandler to the file logs/trace.log formatted as standard
     # cherrypy_access log message using a RotatingFileHandler to the file logs/access.log formatted as access
-    # 
+    #
     # Sub modules used by od.py can log information too.
-    # 
+    #
     # Sub module Default Values
     # docker.utils.config    { 'level': 'INFO' },
     # urllib3.connectionpool { 'level': 'ERROR'},
-    #         
-    # logging configuration 
+    #
+    # logging configuration
     # come from https://docs.python.org/3.8/library/logging.config.html
     # you need to double %% to escape %
-    # 
+    #
     # graylog https://github.com/severb/graypy
     # use handler class name as
     # graypy.GELFUDPHandler - UDP log forwarding
@@ -1125,7 +1125,7 @@ od_config: |
     #        'formatter': 'syslog',
     #        'socktype': socket.SOCK_STREAM,
     #        'address': [ '192.168.1.7', 5140 ]
-    #      }, 
+    #      },
     #      ... }
 
     logging: {
@@ -1190,7 +1190,7 @@ od_config: |
           }
         },
         'loggers': {
-          # dedicated python modules 
+          # dedicated python modules
           'urllib3.connectionpool': {
             'level': 'ERROR',
           },
