@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.1.1 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.1.2 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -214,7 +214,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.1.1        	4.1.1      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.1.2        	4.1.2      	ABCDesktop helm chart
 ~~~
 
 Then to install:
