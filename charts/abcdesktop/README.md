@@ -135,16 +135,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.1.1.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.1.2.tgz
 ~~~
 
-The helm file **abcdesktop-4.1.1.tgz** is created.
+The helm file **abcdesktop-4.1.2.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.1.1.tgz
-==> Linting abcdesktop-4.1.1.tgz
+$ helm lint abcdesktop-4.1.2.tgz
+==> Linting abcdesktop-4.1.2.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -223,7 +223,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.1.1.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.1.2.tgz  -n abcdesktop
 ~~~
 
 ## Uninstall
