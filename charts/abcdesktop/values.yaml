@@ -11,8 +11,8 @@ console:
       memory: 16Mi
 
 memcached:
-  image: memcached
-  tag: alpine
+  image: ghcr.io/abcdesktopio/oc.memcached
+  tag: "4.1"
   replicaCount: 1
   resources:
     limits:
@@ -105,7 +105,7 @@ router:
 
 speedtest:
   image: ghcr.io/abcdesktopio/oc.speedtest
-  tag: "main"
+  tag: "4.1"
   replicaCount: 1
   resources:
     limits:

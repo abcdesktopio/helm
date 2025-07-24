@@ -47,8 +47,8 @@ The following table contains the helm parameters:
 | `console.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
 | `console.resources.requests.cpu`      | CPU request                               | `0.1`                                       |
 | `console.resources.requests.memory`   | Memory request                            | `16Mi`                                      |
-| `memcached.image`                     | Docker image used for Memcached           | `memcached`                                 |
-| `memcached.tag`                       | Docker image tag                          | `alpine`                                    |
+| `memcached.image`                     | Docker image used for Memcached           | `ghcr.io/abcdesktopio/memcached`            |
+| `memcached.tag`                       | Docker image tag                          | `4.1`                                       |
 | `memcached.replicaCount`              | Number of replicas                        | `1`                                         |
 | `memcached.resources.limits.cpu`      | CPU limit                                 | `0.2`                                       |
 | `memcached.resources.limits.memory`   | Memory limit                              | `64Mi`                                      |
@@ -105,7 +105,7 @@ The following table contains the helm parameters:
 | `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
 | `router.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `speedtest.image`                     | Docker image for the Speedtest service    | `ghcr.io/abcdesktopio/oc.speedtest`         |
-| `speedtest.tag`                       | Docker image tag                          | `"main"`                                    |
+| `speedtest.tag`                       | Docker image tag                          | `"4.1"`                                    |
 | `speedtest.replicaCount`              | Number of replicas                        | `1`                                         |
 | `speedtest.resources.limits.cpu`      | CPU limit                                 | `1`                                         |
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
