@@ -1,6 +1,6 @@
 console:
   image: ghcr.io/abcdesktopio/console
-  tag: "4.1"
+  tag: "4.2"
   replicaCount: 1
   resources:
     limits:
@@ -12,7 +12,7 @@ console:
 
 memcached:
   image: ghcr.io/abcdesktopio/oc.memcached
-  tag: "4.1"
+  tag: "4.2"
   replicaCount: 1
   resources:
     limits:
@@ -36,7 +36,7 @@ mongo:
 
 website:
   image: ghcr.io/abcdesktopio/oc.nginx
-  tag: "4.1"
+  tag: "4.2"
   replicaCount: 1
   resources:
     limits:
@@ -55,7 +55,7 @@ website:
 
 openldap:
   image: ghcr.io/abcdesktopio/docker-test-openldap
-  tag: 4.1
+  tag: 4.2
   replicaCount: 1
   resources:
     limits:
@@ -67,7 +67,7 @@ openldap:
 
 pyos:
   image: ghcr.io/abcdesktopio/pyos
-  tag: "4.1.alpine_latest"
+  tag: "4.2.alpine_latest"
   replicaCount: 1
   resources:
     limits:
@@ -86,7 +86,7 @@ pyos:
 
 router:
   image: ghcr.io/abcdesktopio/route
-  tag: "4.1"
+  tag: "4.2"
   replicaCount: 1
   resources:
     limits:
@@ -105,7 +105,7 @@ router:
 
 speedtest:
   image: ghcr.io/abcdesktopio/oc.speedtest
-  tag: "4.1"
+  tag: "4.2"
   replicaCount: 1
   resources:
     limits:
@@ -117,7 +117,7 @@ speedtest:
 
 keysgenerator:
   image: ghcr.io/abcdesktopio/keysgenerator
-  tag: "4.1"
+  tag: "4.2"
   jwtdesktoppayloadkeylength: 2048
   jwtdesktopsigningkeylength: 2048
   jwtusersigningkeylength: 2048
@@ -655,7 +655,7 @@ od_config: |
       # graphical is the main abcdesktop container
       # include x11 service
       'graphical' : {
-        'image': { 'default': 'ghcr.io/abcdesktopio/oc.user.ubuntu.sudo.24.04:4.1' },
+        'image': { 'default': 'ghcr.io/abcdesktopio/oc.user.ubuntu.sudo.24.04:4.2' },
         'imagePullPolicy':  'Always',
         'enable': True,
         'acl':  { 'permit': [ 'all' ] },
@@ -700,7 +700,7 @@ od_config: |
       # container printer
       # printer is a cupsd service
       'printer' : {
-        'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.1',
+        'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.2',
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
         'tcpport': 681,
@@ -722,7 +722,7 @@ od_config: |
       # container filer
       # filer provide upload and download files features
       'filer' : {
-        'image': 'ghcr.io/abcdesktopio/oc.filer:4.1',
+        'image': 'ghcr.io/abcdesktopio/oc.filer:4.2',
         'imagePullPolicy':  'IfNotPresent',
         'enable': True,
         'tcpport': 29783,
@@ -750,7 +750,7 @@ od_config: |
       # http stream can have glitch and does not proviede image and sound sync
       # webrtc gateway with rtp sound stream is better
       'sound': {
-        'image': 'ghcr.io/abcdesktopio/oc.pulseaudio:4.1',
+        'image': 'ghcr.io/abcdesktopio/oc.pulseaudio:4.2',
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
         'tcpport': 29788,

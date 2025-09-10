@@ -2,8 +2,8 @@ apiVersion: v2
 name: abcdesktop
 description: ABCDesktop helm chart
 type: application
-version: 4.1.2
-appVersion: "4.1.2"
+version: 4.2.0
+appVersion: "4.2.0"
 icon: https://www.abcdesktop.io/img/abcdesktop.svg
 
 annotations:
