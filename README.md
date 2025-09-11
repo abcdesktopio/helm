@@ -41,7 +41,7 @@ The following table contains the helm parameters:
 | Key                                   | Description                               | Default Value                               |
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
-| `console.tag`                         | Docker image tag                          | `"4.2"`                                     |
+| `console.tag`                         | Docker image tag                          | `4.2`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
 | `console.resources.limits.cpu`        | CPU limit                                 | `0.5`                                       |
 | `console.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
@@ -55,14 +55,14 @@ The following table contains the helm parameters:
 | `memcached.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `memcached.resources.requests.memory` | Memory request                            | `16Mi`                                      |
 | `mongo.image`                         | Docker image for MongoDB                  | `ghcr.io/abcdesktopio/mongo`                |
-| `mongo.tag`                           | Docker image tag                          | `"safemain"`                                |
+| `mongo.tag`                           | Docker image tag                          | `safemain`                                  |
 | `mongo.replicaCount`                  | Number of replicas                        | `1`                                         |
 | `mongo.resources.limits.cpu`          | CPU limit                                 | `0.5`                                       |
 | `mongo.resources.limits.memory`       | Memory limit                              | `512Mi`                                     |
 | `mongo.resources.requests.cpu`        | CPU request                               | `0.1`                                       |
 | `mongo.resources.requests.memory`     | Memory request                            | `128Mi`                                     |
 | `website.image`                       | Docker image for the website (nginx)      | `ghcr.io/abcdesktopio/oc.nginx`             |
-| `website.tag`                         | Docker image tag                          | `"4.2"`                                     |
+| `website.tag`                         | Docker image tag                          | `4.2`                                       |
 | `website.replicaCount`                | Number of replicas                        | `1`                                         |
 | `website.resources.limits.cpu`        | CPU limit                                 | `0.5`                                       |
 | `website.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
@@ -81,31 +81,31 @@ The following table contains the helm parameters:
 | `openldap.resources.requests.cpu`     | CPU request                               | `0.1`                                       |
 | `openldap.resources.requests.memory`  | Memory request                            | `128Mi`                                     |
 | `pyos.image`                          | Docker image for PyOS                     | `ghcr.io/abcdesktopio/pyos`                 |
-| `pyos.tag`                            | Docker image tag                          | `"4.2.alpine_latest"`                       |
+| `pyos.tag`                            | Docker image tag                          | `4.2.alpine_latest`                         |
 | `pyos.replicaCount`                   | Number of replicas                        | `1`                                         |
 | `pyos.resources.limits.cpu`           | CPU limit                                 | `1`                                         |
 | `pyos.resources.limits.memory`        | Memory limit                              | `2048Mi`                                    |
 | `pyos.resources.requests.cpu`         | CPU request                               | `0.5`                                       |
 | `pyos.resources.requests.memory`      | Memory request                            | `256Mi`                                     |
-| `pyos.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
-| `pyos.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
-| `pyos.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
-| `pyos.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `pyos.autoscaling.enabled`:           | Enable/disable autoscaling                | `false`                                     |
+| `pyos.autoscaling.minReplicas`        | Minimum number of replicas allowed        | `1`                                         |
+| `pyos.autoscaling.maxReplicas`        | Maximum number of replicas allowed        | `100`                                       |
+| `pyos.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                     |
 | `pyos.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `router.image`                        | Docker image for the router               | `ghcr.io/abcdesktopio/route`                |
-| `router.tag`                          | Docker image tag                          | `"4.2"`                                     |
+| `router.tag`                          | Docker image tag                          | `4.2`                                       |
 | `router.replicaCount`                 | Number of replicas                        | `1`                                         |
 | `router.resources.limits.cpu`         | CPU limit                                 | `0.5`                                       |
 | `router.resources.limits.memory`      | Memory limit                              | `512Mi`                                     |
 | `router.resources.requests.cpu`       | CPU request                               | `0.25`                                      |
 | `router.resources.requests.memory`    | Memory request                            | `16Mi`                                      |
-| `router.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
-| `router.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
-| `router.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
-| `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `router.autoscaling.enabled`:         | Enable/disable autoscaling                | `false`                                     |
+| `router.autoscaling.minReplicas`      | Minimum number of replicas allowed        | `1`                                         |
+| `router.autoscaling.maxReplicas`      | Maximum number of replicas allowed        | `100`                                       |
+| `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                   |
 | `router.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `speedtest.image`                     | Docker image for the Speedtest service    | `ghcr.io/abcdesktopio/oc.speedtest`         |
-| `speedtest.tag`                       | Docker image tag                          | `"4.2"`                                    |
+| `speedtest.tag`                       | Docker image tag                          | `4.2`                                       |
 | `speedtest.replicaCount`              | Number of replicas                        | `1`                                         |
 | `speedtest.resources.limits.cpu`      | CPU limit                                 | `1`                                         |
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
