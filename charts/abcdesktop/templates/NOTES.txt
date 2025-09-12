@@ -1,0 +1,13 @@
+# After installation, look at the status of the pods and wait for 'Ruuning'
+
+NAMESPACE=abcdesktop
+kubectl get pods -n ${NAMESPACE}
+
+# To connect with a port forward  
+- port-forwarding is only for testing
+
+LOCAL_PORT=30443
+NAMESPACE=abcdesktop
+kubectl port-forward $(kubectl get pods -l run=router-od -o jsonpath={.items..metadata.name} -n ${NAMESPACE} ) --address 0.0.0.0 "${LOCAL_PORT}:80" -n ${NAMESPACE}
+
+Open your web browser to http://localhost:30443
