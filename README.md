@@ -230,6 +230,15 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.0.tgz  -n abcdesktop
 ~~~
 
+## Change default values
+
+To disable local embedded openldap, if you are using your own ldap directory service
+
+`
+helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.2.0 --create-namespace -n abcdesktop
+`
+
+
 ## Uninstall
 
 ~~~ bash
