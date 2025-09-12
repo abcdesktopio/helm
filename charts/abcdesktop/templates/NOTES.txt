@@ -1,10 +1,14 @@
-# After installation, look at the status of the pods and wait for 'Running'
+
+# After installation, and wait for deployments and services
 
 NAMESPACE=abcdesktop
-kubectl get pods -n ${NAMESPACE}
+kubectl wait deployment -n ${NAMESPACE} --all --for condition=Available=True --timeout=300s
+kubectl get services -n ${NAMESPACE}
 
-# To connect with a port forward  
+
+# To connect to your abcdesktop using a port forward  
 - port-forwarding is only for testing
+- change LOCAL_PORT if need 
 
 LOCAL_PORT=30443
 NAMESPACE=abcdesktop
