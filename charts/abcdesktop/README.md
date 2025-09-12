@@ -14,7 +14,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.1.1 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.2.0 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -39,28 +39,28 @@ The following table contains the helm parameters:
 | Key                                   | Description                               | Default Value                               |
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
-| `console.tag`                         | Docker image tag                          | `"4.1"`                                     |
+| `console.tag`                         | Docker image tag                          | `4.2`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
 | `console.resources.limits.cpu`        | CPU limit                                 | `0.5`                                       |
 | `console.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
 | `console.resources.requests.cpu`      | CPU request                               | `0.1`                                       |
 | `console.resources.requests.memory`   | Memory request                            | `16Mi`                                      |
 | `memcached.image`                     | Docker image used for Memcached           | `ghcr.io/abcdesktopio/memcached`            |
-| `memcached.tag`                       | Docker image tag                          | `4.1`                                       |
+| `memcached.tag`                       | Docker image tag                          | `4.2`                                       |
 | `memcached.replicaCount`              | Number of replicas                        | `1`                                         |
 | `memcached.resources.limits.cpu`      | CPU limit                                 | `0.2`                                       |
 | `memcached.resources.limits.memory`   | Memory limit                              | `64Mi`                                      |
 | `memcached.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `memcached.resources.requests.memory` | Memory request                            | `16Mi`                                      |
 | `mongo.image`                         | Docker image for MongoDB                  | `ghcr.io/abcdesktopio/mongo`                |
-| `mongo.tag`                           | Docker image tag                          | `"safemain"                                 |
+| `mongo.tag`                           | Docker image tag                          | `safemain`                                  |
 | `mongo.replicaCount`                  | Number of replicas                        | `1`                                         |
 | `mongo.resources.limits.cpu`          | CPU limit                                 | `0.5`                                       |
 | `mongo.resources.limits.memory`       | Memory limit                              | `512Mi`                                     |
 | `mongo.resources.requests.cpu`        | CPU request                               | `0.1`                                       |
 | `mongo.resources.requests.memory`     | Memory request                            | `128Mi`                                     |
 | `website.image`                       | Docker image for the website (nginx)      | `ghcr.io/abcdesktopio/oc.nginx`             |
-| `website.tag`                         | Docker image tag                          | `"4.1"`                                     |
+| `website.tag`                         | Docker image tag                          | `4.2`                                       |
 | `website.replicaCount`                | Number of replicas                        | `1`                                         |
 | `website.resources.limits.cpu`        | CPU limit                                 | `0.5`                                       |
 | `website.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
@@ -72,38 +72,38 @@ The following table contains the helm parameters:
 | `website.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
 | `website.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `openldap.image`                      | Docker image for OpenLDAP                 | `ghcr.io/abcdesktopio/docker-test-openldap` |
-| `openldap.tag`                        | Docker image tag                          | `4.1`                                       |
+| `openldap.tag`                        | Docker image tag                          | `4.2`                                       |
 | `openldap.replicaCount`               | Number of replicas                        | `1`                                         |
 | `openldap.resources.limits.cpu`       | CPU limit                                 | `0.5`                                       |
 | `openldap.resources.limits.memory`    | Memory limit                              | `2048Mi`                                    |
 | `openldap.resources.requests.cpu`     | CPU request                               | `0.1`                                       |
 | `openldap.resources.requests.memory`  | Memory request                            | `128Mi`                                     |
 | `pyos.image`                          | Docker image for PyOS                     | `ghcr.io/abcdesktopio/pyos`                 |
-| `pyos.tag`                            | Docker image tag                          | `"4.1.alpine_latest"`                       |
+| `pyos.tag`                            | Docker image tag                          | `4.2.alpine_latest`                         |
 | `pyos.replicaCount`                   | Number of replicas                        | `1`                                         |
 | `pyos.resources.limits.cpu`           | CPU limit                                 | `1`                                         |
 | `pyos.resources.limits.memory`        | Memory limit                              | `2048Mi`                                    |
 | `pyos.resources.requests.cpu`         | CPU request                               | `0.5`                                       |
 | `pyos.resources.requests.memory`      | Memory request                            | `256Mi`                                     |
-| `pyos.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
-| `pyos.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
-| `pyos.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
-| `pyos.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `pyos.autoscaling.enabled`:           | Enable/disable autoscaling                | `false`                                     |
+| `pyos.autoscaling.minReplicas`        | Minimum number of replicas allowed        | `1`                                         |
+| `pyos.autoscaling.maxReplicas`        | Maximum number of replicas allowed        | `100`                                       |
+| `pyos.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                     |
 | `pyos.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `router.image`                        | Docker image for the router               | `ghcr.io/abcdesktopio/route`                |
-| `router.tag`                          | Docker image tag                          | `"4.1"`                                     |
+| `router.tag`                          | Docker image tag                          | `4.2`                                       |
 | `router.replicaCount`                 | Number of replicas                        | `1`                                         |
 | `router.resources.limits.cpu`         | CPU limit                                 | `0.5`                                       |
 | `router.resources.limits.memory`      | Memory limit                              | `512Mi`                                     |
 | `router.resources.requests.cpu`       | CPU request                               | `0.25`                                      |
 | `router.resources.requests.memory`    | Memory request                            | `16Mi`                                      |
-| `router.autoscaling.enabled`:        | Enable/disable autoscaling                | `false`                                     |
-| `router.autoscaling.minReplicas`     | Minimum number of replicas allowed        | `1`                                         |
-| `router.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
-| `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
+| `router.autoscaling.enabled`:         | Enable/disable autoscaling                | `false`                                     |
+| `router.autoscaling.minReplicas`      | Minimum number of replicas allowed        | `1`                                         |
+| `router.autoscaling.maxReplicas`      | Maximum number of replicas allowed        | `100`                                       |
+| `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                   |
 | `router.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `speedtest.image`                     | Docker image for the Speedtest service    | `ghcr.io/abcdesktopio/oc.speedtest`         |
-| `speedtest.tag`                       | Docker image tag                          | `"4.1"`                                     |
+| `speedtest.tag`                       | Docker image tag                          | `4.2`                                       |
 | `speedtest.replicaCount`              | Number of replicas                        | `1`                                         |
 | `speedtest.resources.limits.cpu`      | CPU limit                                 | `1`                                         |
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
@@ -135,22 +135,23 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.1.2.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.2.0.tgz
 ~~~
 
-The helm file **abcdesktop-4.1.2.tgz** is created.
+The helm file **abcdesktop-4.2.0.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.1.2.tgz
-==> Linting abcdesktop-4.1.2.tgz
+$ helm lint abcdesktop-4.2.0.tgz
+==> Linting abcdesktop-4.2.0.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
 ~~~
 
 ## Install helm package
+
 
 ## Certificates
 
@@ -211,7 +212,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.1.1        	4.1.1      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.2.0        	4.2.0      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -223,7 +224,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.1.2.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.0.tgz  -n abcdesktop
 ~~~
 
 ## Uninstall
