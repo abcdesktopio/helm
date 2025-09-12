@@ -73,6 +73,7 @@ The following table contains the helm parameters:
 | `website.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
 | `website.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
 | `website.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
+| `openldap.enabled`                    | boolean `true` or `false` to enable embedded openldap | `true`                          |
 | `openldap.image`                      | Docker image for OpenLDAP                 | `ghcr.io/abcdesktopio/docker-test-openldap` |
 | `openldap.tag`                        | Docker image tag                          | `4.2`                                       |
 | `openldap.replicaCount`               | Number of replicas                        | `1`                                         |
