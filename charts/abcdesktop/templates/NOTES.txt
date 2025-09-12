@@ -1,4 +1,4 @@
-# After installation, look at the status of the pods and wait for 'Ruuning'
+# After installation, look at the status of the pods and wait for 'Running'
 
 NAMESPACE=abcdesktop
 kubectl get pods -n ${NAMESPACE}
