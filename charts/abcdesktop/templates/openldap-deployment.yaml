@@ -1,4 +1,4 @@
----
+{{- if .Values.openldap.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,3 +34,4 @@ spec:
         ports:
           - containerPort: 389
           - containerPort: 636
+{{- end }}

@@ -54,6 +54,7 @@ website:
       # targetMemoryUtilizationPercentage: 80
 
 openldap:
+  enabled: true
   image: ghcr.io/abcdesktopio/docker-test-openldap
   tag: 4.2
   replicaCount: 1

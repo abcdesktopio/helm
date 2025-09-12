@@ -1,3 +1,4 @@
+{{- if .Values.openldap.enabled }}
 kind: Service
 apiVersion: v1
 metadata:
@@ -17,3 +18,4 @@ spec:
     protocol: TCP
     port: 636
     targetPort: 636
+{{- end }}
