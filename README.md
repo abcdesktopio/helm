@@ -232,13 +232,27 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.1.tgz  -n abcdesktop
 ~~~
 
-## Change default values
+## Customize the default value
 
-To disable local embedded openldap, if you are using your own ldap directory service
+- To disable local embedded openldap, if you are using your own ldap directory service
 
-`
-helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.2.1 --create-namespace -n abcdesktop
-`
+```
+helm install abcdesktop abcdesktop/abcdesktop --set openldap.enabled=false --create-namespace -n abcdesktop
+```
+
+- To set the `nodeSelector` value
+
+Sample to use only node with the label `disktype` : `ssd`
+
+```
+helm install abcdesktop abcdesktop/abcdesktop --set-json='nodeSelector={"disktype":"ssd"}' --create-namespace -n abcdesktop
+```
+
+or 
+
+```
+helm install abcdesktop abcdesktop/abcdesktop --set nodeSelector.disktype=ssd --create-namespace -n abcdesktop
+```
 
 
 ## Uninstall
