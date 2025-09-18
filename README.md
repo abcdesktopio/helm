@@ -244,7 +244,7 @@ helm install abcdesktop abcdesktop/abcdesktop --set openldap.enabled=false --cre
 
 Sample to use only node with the label `disktype` : `ssd`
 
-```
+```bash
 helm install abcdesktop abcdesktop/abcdesktop --set-json='nodeSelector={"disktype":"ssd"}' --create-namespace -n abcdesktop
 ```
 
@@ -252,6 +252,40 @@ or
 
 ```
 helm install abcdesktop abcdesktop/abcdesktop --set nodeSelector.disktype=ssd --create-namespace -n abcdesktop
+```
+- To use your own private registry
+
+Update the values.yaml file, all container image values with your own private registry
+
+For example
+
+```yaml
+console:
+  image: ghcr.io/abcdesktopio/console
+```
+
+becomes
+
+```yaml
+console:
+  image: myownregistry.domain.local/abcdesktopio/console
+```
+
+
+- To use a `docker-registry`
+
+Create a Kubernetes docker-registry secret in your namespace 
+
+```bash
+kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>
+```
+
+Update the values.yaml file, to set the `imagePullSecrets` to use the name of your docker-registry secret `[ { name: regcred } ]`
+
+For example 
+
+```
+imagePullSecrets: [ { name: regcred } ]
 ```
 
 
