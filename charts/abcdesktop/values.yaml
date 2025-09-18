@@ -1,4 +1,12 @@
-
+# format imagePullSecrets: [ { name: regcred } ]
+# where 'regcred' is a kubernetes secret in the namespace
+# 
+# kubectl create secret docker-registry regcred \
+#   --docker-server=<your-registry-server> \
+#   --docker-username=<your-name> \
+#   --docker-password=<your-pword> \
+#   --docker-email=<your-email>
+#   -n abcdesktop
 imagePullSecrets: []
 
 console:
