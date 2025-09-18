@@ -16,6 +16,10 @@ spec:
         run: memcached-od
         type: database
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: memcached
         image: {{ .Values.memcached.image }}:{{ .Values.memcached.tag }}
@@ -28,3 +32,7 @@ spec:
             memory: {{ .Values.memcached.resources.requests.memory }}
         ports:
           - containerPort: 11211
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

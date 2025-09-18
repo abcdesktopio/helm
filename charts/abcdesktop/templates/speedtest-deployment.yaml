@@ -14,8 +14,12 @@ spec:
     metadata:
       namespace: {{ .Release.Namespace }}
       labels:
-        run: speedtest-od 
+        run: speedtest-od
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: speedtest
         resources:
@@ -28,3 +32,7 @@ spec:
         image: {{ .Values.speedtest.image }}:{{ .Values.speedtest.tag }}
         ports:
           - containerPort: 8080
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

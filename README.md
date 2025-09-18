@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.2.0 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.2.1 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -40,6 +40,7 @@ The following table contains the helm parameters:
 
 | Key                                   | Description                               | Default Value                               |
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
+| `imagePullSecrets`                    | Secret name to pull images | []              |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
 | `console.tag`                         | Docker image tag                          | `4.2`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
@@ -112,6 +113,7 @@ The following table contains the helm parameters:
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
 | `speedtest.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `speedtest.resources.requests.memory` | Memory request                            | `32Mi`                                      |
+| `nodeSelector` | Node selector | {} |
 | `od_config`                           | configuration file for abcdesktop         | *default configuration file*                |
 
 Note Secrets and ConfigMap should exists before helm deployment, if not it will be created.
@@ -138,16 +140,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.2.0.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.2.1.tgz
 ~~~
 
-The helm file **abcdesktop-4.2.0.tgz** is created.
+The helm file **abcdesktop-4.2.1.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.2.0.tgz
-==> Linting abcdesktop-4.2.0.tgz
+$ helm lint abcdesktop-4.2.1.tgz
+==> Linting abcdesktop-4.2.1.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -215,7 +217,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.2.0        	4.2.0      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.2.1        	4.2.1      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -227,7 +229,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.0.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.1.tgz  -n abcdesktop
 ~~~
 
 ## Change default values
@@ -235,7 +237,7 @@ $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.0.tgz  -
 To disable local embedded openldap, if you are using your own ldap directory service
 
 `
-helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.2.0 --create-namespace -n abcdesktop
+helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.2.1 --create-namespace -n abcdesktop
 `
 
 

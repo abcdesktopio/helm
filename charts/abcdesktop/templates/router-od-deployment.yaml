@@ -25,6 +25,10 @@ spec:
         netpol/nginx: 'true'
         netpol/console: 'true'
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: nginx-router
         imagePullPolicy: Always
@@ -101,3 +105,7 @@ spec:
             secret:
               secretName: abcdesktopjwtdesktoppayload
       dnsPolicy: ClusterFirst
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

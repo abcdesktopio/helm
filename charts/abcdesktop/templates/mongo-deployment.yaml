@@ -19,6 +19,10 @@ spec:
         run: mongodb-od
         type: database
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: mongodb
         image: {{ .Values.mongo.image }}:{{ .Values.mongo.tag }}
@@ -66,7 +70,11 @@ spec:
                mode: 0444
          - name: mongodb-scripts
            configMap:
-             name: configmap-mongodb-scripts 
+             name: configmap-mongodb-scripts
              items:
              - key: ensure-users.js
                path: ensure-users.js
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
