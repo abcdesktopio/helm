@@ -1,0 +1,63 @@
+# Default values for mongo subchart
+enabled: true
+
+data:
+  initContainerScriptPath: "data/init-container.sh"
+  configFilePath: "data/etc/mongodb/mongod.conf"
+  keyfilePath: "data/etc/mongodb/mongod.keyfile"
+  initScriptPath: "data/docker-entrypoint-initdb.d/init.js"
+  initReplicaScriptPath: "data/docker-entrypoint-initdb.d/init-replica.sh"
+
+image:
+  # repository: mongo
+  # tag: "8.0"
+  # repository: mongo-safe
+  # tag: "8.0"
+  repository: ghcr.io/abcdesktopio/mongo
+  tag: "safe8.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+# service:
+#   type: ClusterIP
+#   port: 27017
+#   name: mongodb
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# # MongoDB authentication
+# auth:
+#   enabled: true
+#   database: "desktop"
+#   username: "root"
+#   # Le mot de passe sera généré ou fourni via existingSecret
+#   existingSecret: ""
+
+# Persistence
+persistence:
+  enabled: false
+  storageClass: ""
+  size: 8Gi
+  mountPath: /data/db
+
+# # Node selector
+# nodeSelector: {}
+
+# # Tolerations
+# tolerations: []
+
+# # Affinity
+# affinity: {}
+
+# # Pod annotations
+# podAnnotations: {}
+
+# # Security context
+# securityContext: {}

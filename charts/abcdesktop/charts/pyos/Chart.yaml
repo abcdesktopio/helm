@@ -1,0 +1,6 @@
+apiVersion: v2
+name: pyos
+description: PyOS orchestrator service for ABCDesktop
+type: application
+version: 1.0.0
+appVersion: "4.2"

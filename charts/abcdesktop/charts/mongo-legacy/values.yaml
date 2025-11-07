@@ -1,0 +1,14 @@
+# Default values for mongo subchart
+enabled: true
+
+mongo:
+  image: ghcr.io/abcdesktopio/mongo
+  tag: safemain
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 0.5
+      memory: 512Mi
+    requests:
+      cpu: 0.1
+      memory: 128Mi

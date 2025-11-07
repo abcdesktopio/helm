@@ -1,0 +1,184 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  # name: {{ .Release.Name }}-statefulset
+  name: mongodb-od
+  namespace: {{ .Release.Namespace }}
+  labels:
+    # app: mongodb
+    run: mongodb-od
+    type: database
+    abcdesktop/role: mongodb
+spec:
+  # serviceName: {{ .Release.Name }}-service
+  serviceName: mongodb
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      # app: mongodb
+      run: mongodb-od
+  template:
+    metadata:
+      labels:
+        # app: mongodb
+        run: mongodb-od
+        type: database
+    spec:
+      terminationGracePeriodSeconds: 10
+
+      # --- 1️⃣ InitContainer pour préparer la config
+      initContainers:
+        - name: prepare-config
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - /scripts/init-container.sh
+          volumeMounts:
+            - name: init-container-script
+              mountPath: /scripts/init-container.sh
+              subPath: init-container.sh
+              readOnly: true          
+            - name: config
+              mountPath: /input/mongod.conf
+              subPath: mongod.conf
+            - name: keyfile
+              mountPath: /input/mongod.keyfile
+              subPath: mongod.keyfile
+            - name: prepared-config
+              mountPath: /work/config
+            - name: logs
+              mountPath: /var/log/mongodb
+
+      # --- 2️⃣ Conteneur principal MongoDB
+      containers:
+      - name: mongodb
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        # NE PAS utiliser `command`, on veut laisser docker-entrypoint.sh
+        args: ["--config=/etc/mongodb/mongod.conf"]
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        volumeMounts:
+          - name: prepared-config
+            mountPath: /etc/mongodb
+          - name: abcdesktop
+            mountPath: /etc/abcdesktop
+            readOnly: true
+          - name: init-script
+            mountPath: /docker-entrypoint-initdb.d/init.js
+            subPath: init.js
+            readOnly: true
+          - name: logs
+            mountPath: /var/log/mongodb
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME_FILE
+            value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
+          - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+            value: /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD
+          # - name: MONGO_INITDB_ROOT_USERNAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .Release.Name }}-secret-root
+          #       key: username
+          # - name: MONGO_INITDB_ROOT_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .Release.Name }}-secret-root
+          #       key: password
+          # - name: MONGO_USERNAME
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .Release.Name }}-secret-user
+          #       key: username
+          # - name: MONGO_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .Release.Name }}-secret-user
+          #       key: password
+          # - name: MONGO_INITDB_DATABASE
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ .Release.Name }}-secret-user
+          #       key: database
+        readinessProbe:
+          exec:
+            command:
+            - mongosh
+            - --quiet
+            - --eval
+            - db.adminCommand({ping:1})
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+
+      # --- 3️⃣ Volumes non persistants
+      volumes:
+        - name: init-container-script
+          configMap:
+            # name: {{ .Release.Name }}-configmap
+            name: configmap-mongodb-scripts
+            items:
+              - key: init-container.sh
+                path: init-container.sh
+            defaultMode: 0755
+        - name: config
+          configMap:
+            # name: {{ .Release.Name }}-configmap
+            name: configmap-mongodb-scripts
+            items:
+              - key: mongod.conf
+                path: mongod.conf
+        - name: abcdesktop
+          secret:
+            secretName: secret-mongodb
+            items:
+            - key: MONGO_ROOT_USERNAME
+              path: admin/MONGO_ROOT_USERNAME
+              mode: 0444
+            - key: MONGO_ROOT_PASSWORD
+              path: admin/MONGO_ROOT_PASSWORD
+              mode: 0444
+            - key: MONGO_USERNAME
+              path: MONGO_USERNAME
+              mode: 0444
+            - key: MONGO_PASSWORD
+              path: MONGO_PASSWORD
+              mode: 0444
+            - key: MONGO_USERS_LIST
+              path: MONGO_USERS_LIST
+              mode: 0444
+            - key: MONGO_DBS_LIST
+              path: MONGO_DBS_LIST
+              mode: 0444
+        - name: init-script
+          configMap:
+            # name: {{ .Release.Name }}-configmap
+            name: configmap-mongodb-scripts
+            items:
+              - key: init.js
+                path: init.js
+        - name: keyfile
+          secret:
+            secretName: {{ .Release.Name }}-secret-keyfile
+        - name: prepared-config
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        # --- 4️⃣ Volume non-persistant pour les données MongoDB
+        - name: data
+          emptyDir: {}
+
+# # --- 4️⃣ Volume persistant pour les données MongoDB
+# volumeClaimTemplates:
+#   - metadata:
+#       name: data
+#     spec:
+#       accessModes: ["ReadWriteOnce"]
+#       resources:
+#         requests:
+#           storage: {{ .Values.persistence.size }}

@@ -1,0 +1,13 @@
+apiVersion: v2
+name: mongo-legacy
+description: MongoDB database for ABCDesktop
+type: application
+version: 1.0.0
+appVersion: "safemain"
+keywords:
+  - mongodb
+  - database
+  - abcdesktop
+maintainers:
+  - name: ABCDesktop Team
+    url: https://www.abcdesktop.io/

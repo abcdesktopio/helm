@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # name: {{ .Release.Name }}-job
+  name: mongodb-job
+  namespace: {{ .Release.Namespace }}
+  labels:
+    # app: mongodb
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        # app: mongodb
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init-replica
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/bash", "/scripts/init-replica.sh"]
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: SERVICE
+          # value: {{ .Release.Name }}-service
+          value: mongodb
+        - name: STATEFULSET_NAME
+          # value: {{ .Release.Name }}-statefulset
+          value: mongodb-od
+        - name: REPLICAS
+          value: "{{ .Values.replicaCount }}"
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              # name: {{ .Release.Name }}-secret-root
+              name: secret-mongodb
+              # key: username
+              key: MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              # name: {{ .Release.Name }}-secret-root
+              name: secret-mongodb
+              # key: password
+              key: MONGO_ROOT_PASSWORD
+        - name: MONGO_AUTH_DB
+          value: admin
+        volumeMounts:
+        - name: init-replica-script
+          mountPath: /scripts/init-replica.sh
+          subPath: init-replica.sh
+          readOnly: true
+      volumes:
+      - name: init-replica-script
+        configMap:
+          # name: {{ .Release.Name }}-configmap
+          name: configmap-mongodb-scripts
+          items:
+            - key: init-replica.sh
+              path: init-replica.sh
+          defaultMode: 0755

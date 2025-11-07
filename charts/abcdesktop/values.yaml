@@ -33,17 +33,22 @@ memcached:
       cpu: 0.1
       memory: 16Mi
 
+# mongo:
+#   image: ghcr.io/abcdesktopio/mongo
+#   tag: safemain
+#   replicaCount: 1
+#   resources:
+#     limits:
+#       cpu: 0.5
+#       memory: 512Mi
+#     requests:
+#       cpu: 0.1
+#       memory: 128Mi
+mongoLegacy:
+  enabled: true
 mongo:
-  image: ghcr.io/abcdesktopio/mongo
-  tag: safemain
-  replicaCount: 1
-  resources:
-    limits:
-      cpu: 0.5
-      memory: 512Mi
-    requests:
-      cpu: 0.1
-      memory: 128Mi
+  enabled: false
+  replicaCount: 3
 
 website:
   image: ghcr.io/abcdesktopio/oc.nginx
@@ -77,24 +82,28 @@ openldap:
       cpu: 0.1
       memory: 128Mi
 
+# pyos:
+#   image: ghcr.io/abcdesktopio/pyos
+#   tag: 4.2.alpine_latest
+#   replicaCount: 1
+#   resources:
+#     limits:
+#       cpu: 1
+#       memory: 2048Mi
+#     requests:
+#       cpu: 0.1
+#       memory: 256Mi
+#   # Experimental
+#   autoscaling:
+#       enabled: false
+#       minReplicas: 1
+#       maxReplicas: 100
+#       targetCPUUtilizationPercentage: 80
+#       # targetMemoryUtilizationPercentage: 80
 pyos:
-  image: ghcr.io/abcdesktopio/pyos
-  tag: 4.2.alpine_latest
-  replicaCount: 1
-  resources:
-    limits:
-      cpu: 1
-      memory: 2048Mi
-    requests:
-      cpu: 0.1
-      memory: 256Mi
-  # Experimental
-  autoscaling:
-      enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
-      # targetMemoryUtilizationPercentage: 80
+  enabled: true
+  pyos:
+    replicaCount: 3
 
 router:
   image: ghcr.io/abcdesktopio/route

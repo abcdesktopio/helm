@@ -11,3 +11,29 @@ annotations:
   artifacthub.io/signKey: |
     fingerprint: 0x351794CC
     url: http://keyserver1.pgp.com/vkd/DownloadKey.event?keyid=0xD765E44E351794CC
+
+# Dependencies
+dependencies:
+  - name: mongo
+    version: "2.0.0"
+    repository: "file://./charts/mongo"
+    condition: mongo.enabled
+    tags:
+      - infrastructure
+      - database
+
+  - name: mongo-legacy
+    version: "1.0.0"
+    repository: "file://./charts/mongo"
+    condition: mongoLegacy.enabled
+    tags:
+      - infrastructure
+      - database      
+  
+  - name: pyos
+    version: "1.0.0"
+    repository: "file://./charts/pyos"
+    condition: pyos.enabled
+    tags:
+      - core
+      - orchestrator

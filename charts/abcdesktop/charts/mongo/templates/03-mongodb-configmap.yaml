@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # name: {{ .Release.Name }}-configmap
+  name: configmap-mongodb-scripts
+  namespace: {{ .Release.Namespace }}
+  labels:
+    # app: mongodb
+    abcdesktop/role: mongodb-config
+data:
+  init-container.sh: |
+{{ .Files.Get .Values.data.initContainerScriptPath | indent 4 }}
+  mongod.conf: |
+{{ .Files.Get .Values.data.configFilePath | indent 4 }}
+  init.js: |
+{{ .Files.Get .Values.data.initScriptPath | indent 4 }}
+  init-replica.sh: |
+{{ .Files.Get .Values.data.initReplicaScriptPath | indent 4 }}

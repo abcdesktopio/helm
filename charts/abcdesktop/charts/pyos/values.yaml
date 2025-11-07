@@ -1,0 +1,24 @@
+# Default values for pyos subchart
+
+enabled: true
+
+pyos:
+  image: ghcr.io/abcdesktopio/pyos
+  tag: 4.2.alpine_latest
+  # tag: dev
+  tag: feature-mongo_change_stream.alpine_latest
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 1
+      memory: 2048Mi
+    requests:
+      cpu: 0.1
+      memory: 256Mi
+  # Experimental
+  autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
