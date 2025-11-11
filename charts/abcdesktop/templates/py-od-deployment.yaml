@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: pyos-os
+  name: pyos-od
   labels:
     abcdesktop/role: pyos
 spec:
