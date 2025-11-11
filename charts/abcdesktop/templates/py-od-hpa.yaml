@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: pyos-os
+  name: pyos-od
   labels:
     abcdesktop/role: pyos
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: pyos-os
+    name: pyos-od
   minReplicas: {{ .Values.pyos.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.pyos.autoscaling.maxReplicas }}
   metrics:
