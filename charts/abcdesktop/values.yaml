@@ -1,3 +1,14 @@
+# format imagePullSecrets: [ { name: regcred } ]
+# where 'regcred' is a kubernetes secret in the namespace
+# 
+# kubectl create secret docker-registry regcred \
+#   --docker-server=<your-registry-server> \
+#   --docker-username=<your-name> \
+#   --docker-password=<your-pword> \
+#   --docker-email=<your-email>
+#   -n abcdesktop
+imagePullSecrets: []
+
 console:
   image: ghcr.io/abcdesktopio/console
   tag: 4.2
@@ -122,6 +133,10 @@ keysgenerator:
   jwtdesktoppayloadkeylength: 2048
   jwtdesktopsigningkeylength: 2048
   jwtusersigningkeylength: 2048
+
+# nodeSelector:
+#    disktype: ssd
+nodeSelector: {}
 
 od_config: |
     # od.config

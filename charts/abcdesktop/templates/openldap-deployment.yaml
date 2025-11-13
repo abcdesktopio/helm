@@ -18,6 +18,10 @@ spec:
         run: openldap-od
         netpol/dns: 'true'
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: openldap
         # abcdesktopio/docker-test-openldap:master
@@ -34,4 +38,8 @@ spec:
         ports:
           - containerPort: 389
           - containerPort: 636
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}

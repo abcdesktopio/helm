@@ -18,6 +18,10 @@ spec:
         run: nginx-od
         type: frontend
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: nginx
         imagePullPolicy: Always
@@ -44,3 +48,7 @@ spec:
           requests:
             cpu: {{ .Values.website.resources.requests.cpu }}
             memory: {{ .Values.website.resources.requests.memory }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

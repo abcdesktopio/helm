@@ -1,5 +1,7 @@
 # ABCDesktop helm package
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/abcdesktop)](https://artifacthub.io/packages/search?repo=abcdesktop)
+
 ABCDesktop is a cloud native desktopless service, and a complete work environment accessible from a simple HTML 5 web browser, without any installation. Have a look on https://www.abcdesktop.io/ to get more informations.
 
 ## To install
@@ -38,6 +40,7 @@ The following table contains the helm parameters:
 
 | Key                                   | Description                               | Default Value                               |
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
+| `imagePullSecrets`                    | Secret name to pull images | []              |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
 | `console.tag`                         | Docker image tag                          | `4.2`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
@@ -71,6 +74,7 @@ The following table contains the helm parameters:
 | `website.autoscaling.maxReplicas`     | Maximum number of replicas allowed        | `100`                                       |
 | `website.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                  |
 | `website.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
+| `openldap.enabled`                    | boolean `true` or `false` to enable embedded openldap | `true`                          |
 | `openldap.image`                      | Docker image for OpenLDAP                 | `ghcr.io/abcdesktopio/docker-test-openldap` |
 | `openldap.tag`                        | Docker image tag                          | `4.2`                                       |
 | `openldap.replicaCount`               | Number of replicas                        | `1`                                         |
@@ -109,6 +113,7 @@ The following table contains the helm parameters:
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
 | `speedtest.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `speedtest.resources.requests.memory` | Memory request                            | `32Mi`                                      |
+| `nodeSelector` | Node selector | {} |
 | `od_config`                           | configuration file for abcdesktop         | *default configuration file*                |
 
 Note Secrets and ConfigMap should exists before helm deployment, if not it will be created.
@@ -226,6 +231,15 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ~~~ bash
 $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.0.tgz  -n abcdesktop
 ~~~
+
+## Change default values
+
+To disable local embedded openldap, if you are using your own ldap directory service
+
+`
+helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.2.1 --create-namespace -n abcdesktop
+`
+
 
 ## Uninstall
 

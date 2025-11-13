@@ -40,6 +40,7 @@ The following table contains the helm parameters:
 
 | Key                                   | Description                               | Default Value                               |
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
+| `imagePullSecrets`                    | Secret name to pull images | []              |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
 | `console.tag`                         | Docker image tag                          | `4.2`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
@@ -112,6 +113,7 @@ The following table contains the helm parameters:
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
 | `speedtest.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `speedtest.resources.requests.memory` | Memory request                            | `32Mi`                                      |
+| `nodeSelector` | Node selector | {} |
 | `od_config`                           | configuration file for abcdesktop         | *default configuration file*                |
 
 Note Secrets and ConfigMap should exists before helm deployment, if not it will be created.
@@ -230,9 +232,9 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.0.tgz  -n abcdesktop
 ~~~
 
-## Change default values
+## Customize the default value
 
-To disable local embedded openldap, if you are using your own ldap directory service
+- To disable local embedded openldap, if you are using your own ldap directory service
 
 `
 helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.3.0 --create-namespace -n abcdesktop

@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Release.Namespace }}
-  name: pyos-os
+  name: pyos-od
   labels:
     abcdesktop/role: pyos
 spec:
@@ -29,6 +29,10 @@ spec:
         netpol/router: 'true'
         netpol/nginx: 'true'
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: pyos-serviceaccount
       containers:
       - name : pyos
@@ -135,3 +139,7 @@ spec:
           configMap:
             name: abcdesktop-gshadow-templatefile
       dnsPolicy: ClusterFirst
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
