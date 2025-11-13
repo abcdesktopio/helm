@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.2.1 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.3.0 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -56,7 +56,7 @@ The following table contains the helm parameters:
 | `memcached.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `memcached.resources.requests.memory` | Memory request                            | `16Mi`                                      |
 | `mongo.image`                         | Docker image for MongoDB                  | `ghcr.io/abcdesktopio/mongo`                |
-| `mongo.tag`                           | Docker image tag                          | `safemain`                                  |
+| `mongo.tag`                           | Docker image tag                          | `safe8.0`                                   |
 | `mongo.replicaCount`                  | Number of replicas                        | `1`                                         |
 | `mongo.resources.limits.cpu`          | CPU limit                                 | `0.5`                                       |
 | `mongo.resources.limits.memory`       | Memory limit                              | `512Mi`                                     |
@@ -140,16 +140,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.2.1.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.3.0.tgz
 ~~~
 
-The helm file **abcdesktop-4.2.1.tgz** is created.
+The helm file **abcdesktop-4.3.0.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.2.1.tgz
-==> Linting abcdesktop-4.2.1.tgz
+$ helm lint abcdesktop-4.3.0.tgz
+==> Linting abcdesktop-4.3.0.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -217,7 +217,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.2.1        	4.2.1      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.3.0        	4.3.0      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -229,7 +229,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.2.1.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.0.tgz  -n abcdesktop
 ~~~
 
 ## Change default values
