@@ -73,6 +73,8 @@ spec:
             readOnly: true
           - name: logs
             mountPath: /var/log/mongodb
+          - name: data
+            mountPath: /data/db
         env:
           - name: MONGO_INITDB_ROOT_USERNAME_FILE
             value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
@@ -102,14 +104,9 @@ spec:
           #   valueFrom:
           #     secretKeyRef:
           #       name: {{ .Release.Name }}-secret-user
-          #       key: database
         readinessProbe:
-          exec:
-            command:
-            - mongosh
-            - --quiet
-            - --eval
-            - db.adminCommand({ping:1})
+          tcpSocket:
+            port: 27017
           initialDelaySeconds: 10
           periodSeconds: 10
           failureThreshold: 6
@@ -173,12 +170,13 @@ spec:
         - name: data
           emptyDir: {}
 
-# # --- 4️⃣ Volume persistant pour les données MongoDB
-# volumeClaimTemplates:
-#   - metadata:
-#       name: data
-#     spec:
-#       accessModes: ["ReadWriteOnce"]
-#       resources:
-#         requests:
-#           storage: {{ .Values.persistence.size }}
+  # # --- 4️⃣ Volume persistant pour les données MongoDB
+  # volumeClaimTemplates:
+  #   - metadata:
+  #       name: data
+  #     spec:
+  #       accessModes: ["ReadWriteOnce"]
+  #       storageClassName: "standard"
+  #       resources:
+  #         requests:
+  #           storage: {{ .Values.persistence.size }}
