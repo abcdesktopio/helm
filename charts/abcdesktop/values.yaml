@@ -49,7 +49,9 @@ mongoLegacy:
 mongo:
   enabled: false
   replicaCount: 3
-
+  # persistence:
+  #   enabled: true
+    
 website:
   image: ghcr.io/abcdesktopio/oc.nginx
   tag: 4.2

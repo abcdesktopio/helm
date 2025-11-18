@@ -1,10 +1,14 @@
 # Default values for mongo subchart
 enabled: true
 
+keysgenerator:
+  image: ghcr.io/abcdesktopio/keysgenerator
+  tag: 4.2
+  mongodkeylength: 756
+  
 data:
   initContainerScriptPath: "data/init-container.sh"
   configFilePath: "data/etc/mongodb/mongod.conf"
-  keyfilePath: "data/etc/mongodb/mongod.keyfile"
   initScriptPath: "data/docker-entrypoint-initdb.d/init.js"
   initReplicaScriptPath: "data/docker-entrypoint-initdb.d/init-replica.sh"
 
@@ -40,11 +44,15 @@ resources:
 #   # Le mot de passe sera généré ou fourni via existingSecret
 #   existingSecret: ""
 
-# Persistence
+# Persistence - Configuration du stockage des données MongoDB
 persistence:
+  # enabled: true pour volume persistant, false pour volume non-persistant (emptyDir)
   enabled: false
+  # Classe de stockage à utiliser (laisser vide pour utiliser la classe par défaut)
   storageClass: ""
+  # Taille du volume persistant
   size: 8Gi
+  # Point de montage dans le conteneur (ne pas modifier)
   mountPath: /data/db
 
 # # Node selector

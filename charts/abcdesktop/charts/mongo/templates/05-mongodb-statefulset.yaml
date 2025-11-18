@@ -1,26 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  # name: {{ .Release.Name }}-statefulset
   name: mongodb-od
   namespace: {{ .Release.Namespace }}
   labels:
-    # app: mongodb
     run: mongodb-od
     type: database
     abcdesktop/role: mongodb
 spec:
-  # serviceName: {{ .Release.Name }}-service
   serviceName: mongodb
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      # app: mongodb
       run: mongodb-od
   template:
     metadata:
       labels:
-        # app: mongodb
         run: mongodb-od
         type: database
     spec:
@@ -80,30 +75,6 @@ spec:
             value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
           - name: MONGO_INITDB_ROOT_PASSWORD_FILE
             value: /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD
-          # - name: MONGO_INITDB_ROOT_USERNAME
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ .Release.Name }}-secret-root
-          #       key: username
-          # - name: MONGO_INITDB_ROOT_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ .Release.Name }}-secret-root
-          #       key: password
-          # - name: MONGO_USERNAME
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ .Release.Name }}-secret-user
-          #       key: username
-          # - name: MONGO_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ .Release.Name }}-secret-user
-          #       key: password
-          # - name: MONGO_INITDB_DATABASE
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: {{ .Release.Name }}-secret-user
         readinessProbe:
           tcpSocket:
             port: 27017
@@ -117,7 +88,6 @@ spec:
       volumes:
         - name: init-container-script
           configMap:
-            # name: {{ .Release.Name }}-configmap
             name: configmap-mongodb-scripts
             items:
               - key: init-container.sh
@@ -125,7 +95,6 @@ spec:
             defaultMode: 0755
         - name: config
           configMap:
-            # name: {{ .Release.Name }}-configmap
             name: configmap-mongodb-scripts
             items:
               - key: mongod.conf
@@ -154,7 +123,6 @@ spec:
               mode: 0444
         - name: init-script
           configMap:
-            # name: {{ .Release.Name }}-configmap
             name: configmap-mongodb-scripts
             items:
               - key: init.js
@@ -166,17 +134,23 @@ spec:
           emptyDir: {}
         - name: logs
           emptyDir: {}
+        {{- if not .Values.persistence.enabled }}
         # --- 4️⃣ Volume non-persistant pour les données MongoDB
         - name: data
           emptyDir: {}
+        {{- end }}
 
-  # # --- 4️⃣ Volume persistant pour les données MongoDB
-  # volumeClaimTemplates:
-  #   - metadata:
-  #       name: data
-  #     spec:
-  #       accessModes: ["ReadWriteOnce"]
-  #       storageClassName: "standard"
-  #       resources:
-  #         requests:
-  #           storage: {{ .Values.persistence.size }}
+{{- if .Values.persistence.enabled }}
+  # --- 4️⃣ Volume persistant pour les données MongoDB
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+{{- end }}
