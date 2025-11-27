@@ -72,7 +72,7 @@ openldap:
   resources:
     limits:
       cpu: 0.5
-      memory: 3072Mi
+      memory: 4096Mi
     requests:
       cpu: 0.1
       memory: 128Mi
