@@ -21,7 +21,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
 
-      # --- 1️⃣ InitContainer pour préparer la config
+      # --- InitContainer to prepare configuration
       initContainers:
         - name: prepare-config
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -46,12 +46,12 @@ spec:
             - name: logs
               mountPath: /var/log/mongodb
 
-      # --- 2️⃣ Conteneur principal MongoDB
+      # --- Main MongoDB container
       containers:
       - name: mongodb
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        # NE PAS utiliser `command`, on veut laisser docker-entrypoint.sh
+        # DO NOT use `command`, keep docker-entrypoint.sh
         args: ["--config=/etc/mongodb/mongod.conf"]
         ports:
         - containerPort: 27017
@@ -84,7 +84,7 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
 
-      # --- 3️⃣ Volumes non persistants
+      # --- Non-persistent volumes
       volumes:
         - name: init-container-script
           configMap:
@@ -135,13 +135,13 @@ spec:
         - name: logs
           emptyDir: {}
         {{- if not .Values.persistence.enabled }}
-        # --- 4️⃣ Volume non-persistant pour les données MongoDB
+        # --- Non-persistent volume for MongoDB data
         - name: data
           emptyDir: {}
         {{- end }}
 
 {{- if .Values.persistence.enabled }}
-  # --- 4️⃣ Volume persistant pour les données MongoDB
+  # --- Persistent volume for MongoDB data
   volumeClaimTemplates:
     - metadata:
         name: data

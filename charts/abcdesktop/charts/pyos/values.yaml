@@ -4,7 +4,7 @@ enabled: true
 
 pyos:
   image: ghcr.io/abcdesktopio/pyos
-  tag: 4.2.alpine_latest
+  # tag: 4.2.alpine_latest
   # tag: dev
   tag: feature-mongo_change_stream.alpine_latest
   replicaCount: 1

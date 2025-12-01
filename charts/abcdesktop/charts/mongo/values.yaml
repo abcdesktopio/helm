@@ -44,15 +44,15 @@ resources:
 #   # Le mot de passe sera généré ou fourni via existingSecret
 #   existingSecret: ""
 
-# Persistence - Configuration du stockage des données MongoDB
+# Persistence - MongoDB data storage configuration
 persistence:
-  # enabled: true pour volume persistant, false pour volume non-persistant (emptyDir)
+  # enabled: true for persistent volume, false for non-persistent volume (emptyDir)
   enabled: false
-  # Classe de stockage à utiliser (laisser vide pour utiliser la classe par défaut)
+  # Storage class to use (leave empty for default class)
   storageClass: ""
-  # Taille du volume persistant
+  # Persistent volume size
   size: 8Gi
-  # Point de montage dans le conteneur (ne pas modifier)
+  # Mount path in the container (do not change)
   mountPath: /data/db
 
 # # Node selector

@@ -48,7 +48,7 @@ mongoLegacy:
   enabled: true
 mongo:
   enabled: false
-  replicaCount: 3
+  # replicaCount: 3
   # persistence:
   #   enabled: true
     
@@ -104,8 +104,8 @@ openldap:
 #       # targetMemoryUtilizationPercentage: 80
 pyos:
   enabled: true
-  pyos:
-    replicaCount: 3
+    # pyos:
+    #   replicaCount: 3
 
 router:
   image: ghcr.io/abcdesktopio/route
