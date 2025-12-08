@@ -1,0 +1,216 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-od
+  namespace: {{ .Release.Namespace }}
+  labels:
+    run: mongodb-od
+    type: database
+    abcdesktop/role: mongodb
+spec:
+  serviceName: mongodb
+  replicas: {{ .Values.mongo.replicaCount }}
+  selector:
+    matchLabels:
+      run: mongodb-od
+  template:
+    metadata:
+      labels:
+        run: mongodb-od
+        type: database
+    spec:
+      terminationGracePeriodSeconds: 10
+
+      # --- InitContainer to prepare configuration
+      initContainers:
+        - name: prepare-config
+          image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
+          imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - /scripts/init-container.sh
+          volumeMounts:
+            - name: init-container-script
+              mountPath: /scripts/init-container.sh
+              subPath: init-container.sh
+              readOnly: true          
+            - name: config
+              mountPath: /input/mongod.conf
+              subPath: mongod.conf
+            - name: keyfile
+              mountPath: /input/mongod.keyfile
+              subPath: mongod.keyfile
+            - name: prepared-config
+              mountPath: /work/config
+            - name: logs
+              mountPath: /var/log/mongodb
+
+      # --- Main MongoDB container
+      containers:
+      - name: mongodb
+        image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
+        imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
+        # DO NOT use `command`, keep docker-entrypoint.sh
+        args: ["--config=/etc/mongodb/mongod.conf"]
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        volumeMounts:
+          - name: prepared-config
+            mountPath: /etc/mongodb
+          - name: abcdesktop
+            mountPath: /etc/abcdesktop
+            readOnly: true
+          - name: init-script
+            mountPath: /docker-entrypoint-initdb.d/init.js
+            subPath: init.js
+            readOnly: true
+          - name: logs
+            mountPath: /var/log/mongodb
+          - name: data
+            mountPath: /data/db
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME_FILE
+            value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
+          - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+            value: /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD
+        readinessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6
+        resources:
+{{ toYaml .Values.mongo.resources | indent 10 }}
+
+      # --- Sidecar: replica set manager ---
+      - name: replica-manager
+        image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
+        imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
+        command:
+          - sh
+          - -c
+          - |
+            # Execute init-replica.sh only on pod 0
+            if [ "$(hostname)" = "mongodb-od-0" ]; then
+              echo "Running replica set initialization on $(hostname)...";
+              /bin/bash /scripts/init-replica.sh;
+            else
+              echo "Not primary pod, keeping sidecar alive...";
+            fi
+            tail -f /dev/null;
+        env:
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: SERVICE
+            value: mongodb
+          - name: STATEFULSET_NAME
+            value: mongodb-od
+          - name: REPLICAS
+            value: "{{ .Values.mongo.replicaCount }}"
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: secret-mongodb
+                key: MONGO_ROOT_USERNAME
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secret-mongodb
+                key: MONGO_ROOT_PASSWORD
+          - name: MONGO_AUTH_DB
+            value: admin
+        volumeMounts:
+          - name: init-replica-script
+            mountPath: /scripts/init-replica.sh
+            subPath: init-replica.sh
+            readOnly: true
+        resources:
+{{ toYaml .Values.mongo.resources | indent 10 }}
+          # limits:
+          #   cpu: 100m
+          #   memory: 128Mi
+          # requests:
+          #   cpu: 50m
+          #   memory: 64Mi
+
+      # --- Non-persistent volumes
+      volumes:
+        - name: init-container-script
+          configMap:
+            name: configmap-mongodb-scripts
+            items:
+              - key: init-container.sh
+                path: init-container.sh
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: configmap-mongodb-scripts
+            items:
+              - key: mongod.conf
+                path: mongod.conf
+        - name: abcdesktop
+          secret:
+            secretName: secret-mongodb
+            items:
+            - key: MONGO_ROOT_USERNAME
+              path: admin/MONGO_ROOT_USERNAME
+              mode: 0444
+            - key: MONGO_ROOT_PASSWORD
+              path: admin/MONGO_ROOT_PASSWORD
+              mode: 0444
+            - key: MONGO_USERNAME
+              path: MONGO_USERNAME
+              mode: 0444
+            - key: MONGO_PASSWORD
+              path: MONGO_PASSWORD
+              mode: 0444
+            - key: MONGO_USERS_LIST
+              path: MONGO_USERS_LIST
+              mode: 0444
+            - key: MONGO_DBS_LIST
+              path: MONGO_DBS_LIST
+              mode: 0444
+        - name: init-script
+          configMap:
+            name: configmap-mongodb-scripts
+            items:
+              - key: init.js
+                path: init.js
+        - name: init-replica-script
+          configMap:
+            name: configmap-mongodb-scripts
+            items:
+              - key: init-replica.sh
+                path: init-replica.sh
+            defaultMode: 0755
+        - name: keyfile
+          secret:
+            secretName: {{ .Release.Name }}-secret-keyfile
+        - name: prepared-config
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        {{- if not .Values.mongo.persistence.enabled }}
+        # --- Non-persistent volume for MongoDB data
+        - name: data
+          emptyDir: {}
+        {{- end }}
+
+{{- if .Values.mongo.persistence.enabled }}
+  # --- Persistent volume for MongoDB data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        {{- if .Values.mongo.persistence.storageClass }}
+        storageClassName: {{ .Values.mongo.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mongo.persistence.size }}
+{{- end }}

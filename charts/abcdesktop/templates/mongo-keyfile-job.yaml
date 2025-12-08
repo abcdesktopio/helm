@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: generate-mongod-keyfile
+spec:
+  template:
+    spec:
+      serviceAccountName: pyos-serviceaccount
+      restartPolicy: OnFailure
+      {{- with .Values.mongo.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: generate-mongod-keyfile
+        imagePullPolicy: IfNotPresent
+        image: {{ .Values.mongo.keysgenerator.image }}:{{ .Values.mongo.keysgenerator.tag }}
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            openssl rand -base64 {{ .Values.mongo.keysgenerator.mongodkeylength }} > mongod.keyfile && \
+            if ! kubectl get secret {{ .Release.Name }}-secret-keyfile --namespace={{ .Release.Namespace }} >/dev/null 2>&1; then
+              kubectl create secret generic {{ .Release.Name }}-secret-keyfile --from-file=mongod.keyfile --namespace={{ .Release.Namespace }}
+            else
+              echo "Secret already exists"
+            fi
+      {{- with .Values.mongo.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
