@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.3.0 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.3.1 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -40,7 +40,7 @@ The following table contains the helm parameters:
 
 | Key                                   | Description                               | Default Value                               |
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
-| `imagePullSecrets`                    | Secret name to pull images | []              |
+| `imagePullSecrets`                    | Secret name to pull images                | []              |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
 | `console.tag`                         | Docker image tag                          | `4.2`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
@@ -55,13 +55,22 @@ The following table contains the helm parameters:
 | `memcached.resources.limits.memory`   | Memory limit                              | `64Mi`                                      |
 | `memcached.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `memcached.resources.requests.memory` | Memory request                            | `16Mi`                                      |
-| `mongo.image`                         | Docker image for MongoDB                  | `ghcr.io/abcdesktopio/mongo`                |
-| `mongo.tag`                           | Docker image tag                          | `safe8.0`                                   |
-| `mongo.replicaCount`                  | Number of replicas                        | `1`                                         |
-| `mongo.resources.limits.cpu`          | CPU limit                                 | `0.5`                                       |
+| `mongo.enabled`                       | Enable/disable MongoDB deployment         | `true`                                      |
+| `mongo.keysgenerator.image`           | Docker image for keys generator           | `ghcr.io/abcdesktopio/keysgenerator`        |
+| `mongo.keysgenerator.tag`             | Keys generator image tag                  | `4.2`                                       |
+| `mongo.keysgenerator.mongodkeylength` | MongoDB keyfile length                    | `756`                                       |
+| `mongo.image.repository`              | Docker image repository for MongoDB       | `ghcr.io/abcdesktopio/mongo`                |
+| `mongo.image.tag`                     | Docker image tag                          | `safe8.0`                                   |
+| `mongo.image.pullPolicy`              | Image pull policy                         | `IfNotPresent`                              |
+| `mongo.replicaCount`                  | Number of replica set members             | `1`                                         |
+| `mongo.resources.limits.cpu`          | CPU limit                                 | `500m`                                      |
 | `mongo.resources.limits.memory`       | Memory limit                              | `512Mi`                                     |
-| `mongo.resources.requests.cpu`        | CPU request                               | `0.1`                                       |
+| `mongo.resources.requests.cpu`        | CPU request                               | `100m`                                      |
 | `mongo.resources.requests.memory`     | Memory request                            | `128Mi`                                     |
+| `mongo.persistence.enabled`           | Enable persistent volume for MongoDB data | `false`                                     |
+| `mongo.persistence.storageClass`      | Storage class for persistent volume       | `""`                                        |
+| `mongo.persistence.size`              | Persistent volume size                    | `8Gi`                                       |
+| `mongo.persistence.mountPath`         | Mount path in container                   | `/data/db`                                  |
 | `website.image`                       | Docker image for the website (nginx)      | `ghcr.io/abcdesktopio/oc.nginx`             |
 | `website.tag`                         | Docker image tag                          | `4.2`                                       |
 | `website.replicaCount`                | Number of replicas                        | `1`                                         |
@@ -140,16 +149,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.3.0.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.3.1.tgz
 ~~~
 
-The helm file **abcdesktop-4.3.0.tgz** is created.
+The helm file **abcdesktop-4.3.1.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.3.0.tgz
-==> Linting abcdesktop-4.3.0.tgz
+$ helm lint abcdesktop-4.3.1.tgz
+==> Linting abcdesktop-4.3.1.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -217,7 +226,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.3.0        	4.3.0      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.3.1        	4.3.1      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -229,7 +238,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.0.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.1.tgz  -n abcdesktop
 ~~~
 
 ## Change default values
