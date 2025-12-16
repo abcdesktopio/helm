@@ -189,7 +189,7 @@ spec:
             defaultMode: 0755
         - name: keyfile
           secret:
-            secretName: {{ .Release.Name }}-secret-keyfile
+            secretName: abcdesktop-mongod-keyfile
         - name: prepared-config
           emptyDir: {}
         - name: logs

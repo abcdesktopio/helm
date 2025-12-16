@@ -22,6 +22,7 @@ spec:
       {{- end }}
       containers:
       - name: memcached
+        imagePullPolicy: Always
         image: {{ .Values.memcached.image }}:{{ .Values.memcached.tag }}
         resources:
           limits:

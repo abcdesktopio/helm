@@ -4,7 +4,7 @@ metadata:
   name: http-router
   namespace: {{ .Release.Namespace }}
   labels:
-    abcdesktop/role: router-od
+    abcdesktop/role: router
 spec:
   type: NodePort
   selector:

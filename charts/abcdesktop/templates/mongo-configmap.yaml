@@ -4,7 +4,7 @@ metadata:
   name: configmap-mongodb-scripts
   namespace: {{ .Release.Namespace }}
   labels:
-    abcdesktop/role: mongodb-config
+    abcdesktop/role: mongodb
 data:
   init-container.sh: |
     #!/bin/bash

@@ -23,6 +23,7 @@ spec:
       {{- end }}
       containers:
       - name: console
+        imagePullPolicy: Always
         image: {{ .Values.console.image }}:{{ .Values.console.tag }}
         ports:
           - containerPort: 80

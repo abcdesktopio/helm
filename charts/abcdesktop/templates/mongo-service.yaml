@@ -6,11 +6,10 @@ metadata:
   labels:
     abcdesktop/role: mongodb
 spec:
+  clusterIP: None
+  selector:
+    run: mongodb-od
   ports:
   - protocol: TCP
     port: 27017
     targetPort: 27017
-    name: mongodb
-  clusterIP: None
-  selector:
-    run: mongodb-od 

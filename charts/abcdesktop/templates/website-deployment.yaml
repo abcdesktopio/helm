@@ -5,6 +5,7 @@ metadata:
   name: nginx-od
   labels:
     namespace: {{ .Release.Namespace }}
+    abcdesktop/role: website
 spec:
   replicas: {{ .Values.website.replicaCount }}
   selector:
