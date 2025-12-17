@@ -798,6 +798,7 @@ od_config: |
       # container printer
       # printer is a cupsd service
       'printer' : {
+        'volumes': [ 'tmp' ],
         'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.3',
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
@@ -834,7 +835,7 @@ od_config: |
       # container storage
       # storage is just a pause go get all volumes
       'storage' : {
-        'volumes': [ 'extrausers', 'tmp', 'home', 'log' ],
+        'volumes': [ 'tmp', 'home', 'log' ],
         'image': 'registry.k8s.io/pause:3.10.1',
         'imagePullPolicy':  'IfNotPresent',
         'enable': True,
