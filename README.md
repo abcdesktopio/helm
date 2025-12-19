@@ -105,6 +105,7 @@ The following table contains the helm parameters:
 | `pyos.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `router.image`                        | Docker image for the router               | `ghcr.io/abcdesktopio/route`                |
 | `router.tag`                          | Docker image tag                          | `4.3`                                       |
+| `router.nodePort`                     | Service Node Port                         | `30443` or leave empty/null to disable      |
 | `router.replicaCount`                 | Number of replicas                        | `1`                                         |
 | `router.resources.limits.cpu`         | CPU limit                                 | `0.5`                                       |
 | `router.resources.limits.memory`      | Memory limit                              | `512Mi`                                     |

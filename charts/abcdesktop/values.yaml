@@ -121,6 +121,7 @@ pyos:
 router:
   image: ghcr.io/abcdesktopio/route
   tag: 4.3
+  # nodePort: 30443  # or leave empty/null to disable
   replicaCount: 1
   resources:
     limits:
@@ -658,7 +659,7 @@ od_config: |
     # then map executeclasses to application
     executeclasses : {
       'default':{
-        'description': '1 CPU cores and 2Gi',
+        'description': 'default: 1 CPU cores and 2Gi',
         'nodeSelector':None,
         'resources':{
           'requests':{'memory':"512Mi",'cpu':"100m"},
@@ -666,7 +667,7 @@ od_config: |
         }
       },
       'bronze':{
-        'description': '1 core / 2 Gi / 0 GPU',
+        'description': 'bronze: 1 core / 2 Gi / 0 GPU',
         'nodeSelector':None,
         'resources':{
           'requests':{'memory':"64Mi",'cpu':"100m"},
@@ -674,7 +675,7 @@ od_config: |
         }
       },
       'silver':{
-        'description': '2 cores / 4 Gi / 1 GPU',
+        'description': 'silver: 2 cores / 4 Gi / 1 GPU',
         'nodeSelector':None,
         'resources':{
           'requests':{'memory':"64Mi",'cpu':"100m"},
@@ -682,7 +683,7 @@ od_config: |
         }
       },
       'gold':{
-        'description': '4 cores / 8 Gi / 1 GPU',
+        'description': 'gold: 4 cores / 8 Gi / 1 GPU',
         'nodeSelector':None,
         'resources':{
           'requests':{'memory':"128Mi",'cpu':"100m"},
@@ -716,21 +717,18 @@ od_config: |
         'tolerations': []
       },
       'default_volumes': {
-        # 'input'   : { 'name': 'input',    'hostPath': { 'path': '/dev/input' } }, # uncomment this line to use gamepad         
         'shm': { 'name': 'shm', 'emptyDir': { 'medium': 'Memory', 'sizeLimit': '512Mi' } },
-        'run': { 'name': 'run', 'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1M'    } },
+        'run': { 'name': 'run', 'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1Mi'    } },
         'tmp': { 'name': 'tmp', 'emptyDir': { 'medium': 'Memory', 'sizeLimit': '8Gi'   } },
         'log': { 'name': 'log', 'emptyDir': { 'medium': 'Memory', 'sizeLimit': '8Gi'   } },
-        'rundbus': { 'name': 'rundbus',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '8M' } },
-        'runuser': { 'name': 'runuser',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '8M' } },
-        'x11socket': { 'name': 'x11socket',  'emptyDir': { 'medium': 'Memory' } },
-        'pulseaudiosocket' :  { 'name': 'pulseaudiosocket',  'emptyDir': { 'medium': 'Memory' } },
-        'cupsdsocket': { 'name': 'cupsdsocket',  'emptyDir': { 'medium': 'Memory' } },
-      	'extrausers': { 'name': 'extrausers',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1M' } },
-        'sudoers': { 'name': 'sudoers',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1M' } }
+        'rundbus': { 'name': 'rundbus',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '8Mi' } },
+        'runuser': { 'name': 'runuser',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '8Mi' } },
+        'x11socket': { 'name': 'x11socket',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1Ki' } },
+        'cupsdsocket': { 'name': 'cupsdsocket',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1Ki' } },
+      	'extrausers': { 'name': 'extrausers',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1Mi' } },
+        'sudoers': { 'name': 'sudoers',  'emptyDir': { 'medium': 'Memory', 'sizeLimit': '1Mi' } }
       },
       'default_volumes_mount': {
-      	# 'input' :  { 'name': 'input',  'mountPath': '/dev/input'  }, # uncomment this line to use gamepad 
         'shm': { 'name': 'shm', 'mountPath' : '/dev/shm' },
         'run': { 'name': 'run',  'mountPath': '/var/run/desktop' },
         'tmp': { 'name': 'tmp',  'mountPath': '/tmp' },
@@ -738,7 +736,6 @@ od_config: |
         'rundbus': { 'name': 'rundbus',  'mountPath': '/var/run/dbus' },
         'runuser': { 'name': 'runuser',  'mountPath': '/run/user/' },
         'x11socket': { 'name': 'x11socket',  'mountPath': '/tmp/.X11-unix' },
-        'pulseaudiosocket':  { 'name': 'pulseaudiosocket',  'mountPath': '/tmp/.pulseaudio' },
         'cupsdsocket': { 'name': 'cupsdsocket',  'mountPath': '/tmp/.cupsd' },
         'extrausers': { 'name': 'extrausers',  'mountPath': '/var/lib/extrausers' },
         'sudoers': { 'name': 'sudoers', 'mountPath': '/etc/sudoers.d' }
@@ -747,9 +744,7 @@ od_config: |
       # include x11 service
       'graphical' : {
         'image': { 'default': 'ghcr.io/abcdesktopio/oc.user.ubuntu.sudo.24.04:4.3' },
-        # replace this line to use gamepad, by adding 'input' device entrie
-          # 'volumes': [ 'sudoers', 'extrausers', 'x11socket', 'pulseaudiosocket', 'cupsdsocket', 'tmp', 'run', 'log', 'rundbus', 'runuser', 'input' ],
-        'volumes': [ 'sudoers', 'extrausers', 'x11socket', 'pulseaudiosocket', 'cupsdsocket', 'tmp', 'run', 'log', 'rundbus', 'runuser' ],
+        'volumes': [ 'sudoers', 'extrausers', 'x11socket', 'cupsdsocket', 'tmp', 'run', 'log', 'rundbus', 'runuser' ],
         'imagePullPolicy':  'Always',
         'enable': True,
         'acl':  { 'permit': [ 'all' ] },
@@ -798,10 +793,10 @@ od_config: |
       # container printer
       # printer is a cupsd service
       'printer' : {
-        'volumes': [ 'tmp' ],
+        'volumes': [ 'tmp', 'cupsdsocket' ],
         'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.3',
         'imagePullPolicy': 'IfNotPresent',
-        'enable': True,
+        'enable': False,
         'tcpport': 681,
         'securityContext': { 'runAsUser': 0, 'runAsGroup': 0 },
         'resources': {
@@ -831,19 +826,6 @@ od_config: |
           'limits'  : { 'memory': "256Mi",'cpu': "100m" }
         },
         'acl':  { 'permit': [ 'all' ] }
-        },
-      # container storage
-      # storage is just a pause go get all volumes
-      'storage' : {
-        'volumes': [ 'tmp', 'home', 'log' ],
-        'image': 'registry.k8s.io/pause:3.10.1',
-        'imagePullPolicy':  'IfNotPresent',
-        'enable': True,
-        'acl': { 'permit': [ 'all' ] },
-        'resources': {
-          'requests': { 'memory': "8Mi",  'cpu': "5m" },
-          'limits'  : { 'memory': "32Mi", 'cpu': "5m" }
-        }
       },
       # container sound
       # sound is a pulseaudio service instance
@@ -900,7 +882,7 @@ od_config: |
       #
       'ephemeral_container': {
         'enable': True,
-      	'volumes': [ 'sudoers', 'extrausers', 'x11socket', 'pulseaudiosocket', 'cupsdsocket', 'tmp', 'run', 'log', 'rundbus', 'runuser' ],
+      	'volumes': [ 'sudoers', 'extrausers', 'x11socket', 'cupsdsocket', 'tmp', 'run', 'log', 'rundbus', 'runuser' ],
         'acl':  { 'permit': [ 'all' ] },
         'securityContext': {
             'supplementalGroups': [ '{{ supplementalGroups }}' ] ,
@@ -1327,3 +1309,4 @@ od_config: |
           'level': 'DEBUG',
           'handlers': [ 'stderr', 'stdout',  'trace' ]
         }}
+

@@ -12,6 +12,8 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    # nodePort: 30443
+{{- if .Values.router.nodePort }}
+    nodePort: {{ .Values.router.nodePort }}
+{{- end }}
     targetPort: 80
     name: http
