@@ -824,7 +824,6 @@ od_config: |
         'enable': True,
         'tcpport': 29788,
         'acl':  { 'permit': [ 'all' ] }
-        }
       },
       # container init
       # a simple busybox to chowner and chmod of homedir
