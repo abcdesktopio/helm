@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.3.0 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.3.1 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -42,28 +42,37 @@ The following table contains the helm parameters:
 | ------------------------------------- | ----------------------------------------- | ------------------------------------------- |
 | `imagePullSecrets`                    | Secret name to pull images | []              |
 | `console.image`                       | Docker image used for the console service | `ghcr.io/abcdesktopio/console`              |
-| `console.tag`                         | Docker image tag                          | `4.2`                                       |
+| `console.tag`                         | Docker image tag                          | `4.3`                                       |
 | `console.replicaCount`                | Number of replicas for the console        | `1`                                         |
 | `console.resources.limits.cpu`        | CPU limit                                 | `0.5`                                       |
 | `console.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
 | `console.resources.requests.cpu`      | CPU request                               | `0.1`                                       |
 | `console.resources.requests.memory`   | Memory request                            | `16Mi`                                      |
 | `memcached.image`                     | Docker image used for Memcached           | `ghcr.io/abcdesktopio/memcached`            |
-| `memcached.tag`                       | Docker image tag                          | `4.2`                                       |
+| `memcached.tag`                       | Docker image tag                          | `4.3`                                       |
 | `memcached.replicaCount`              | Number of replicas                        | `1`                                         |
 | `memcached.resources.limits.cpu`      | CPU limit                                 | `0.2`                                       |
 | `memcached.resources.limits.memory`   | Memory limit                              | `64Mi`                                      |
 | `memcached.resources.requests.cpu`    | CPU request                               | `0.1`                                       |
 | `memcached.resources.requests.memory` | Memory request                            | `16Mi`                                      |
-| `mongo.image`                         | Docker image for MongoDB                  | `ghcr.io/abcdesktopio/mongo`                |
-| `mongo.tag`                           | Docker image tag                          | `safe8.0`                                   |
-| `mongo.replicaCount`                  | Number of replicas                        | `1`                                         |
-| `mongo.resources.limits.cpu`          | CPU limit                                 | `0.5`                                       |
+| `mongo.enabled`                       | Enable/disable MongoDB deployment         | `true`                                      |
+| `mongo.keysgenerator.image`           | Docker image for keys generator           | `ghcr.io/abcdesktopio/keysgenerator`        |
+| `mongo.keysgenerator.tag`             | Keys generator image tag                  | `4.3`                                       |
+| `mongo.keysgenerator.mongodkeylength` | MongoDB keyfile length                    | `756`                                       |
+| `mongo.image.repository`              | Docker image repository for MongoDB       | `ghcr.io/abcdesktopio/mongo`                |
+| `mongo.image.tag`                     | Docker image tag                          | `safe8.0`                                   |
+| `mongo.image.pullPolicy`              | Image pull policy                         | `IfNotPresent`                              |
+| `mongo.replicaCount`                  | Number of replica set members             | `1`                                         |
+| `mongo.resources.limits.cpu`          | CPU limit                                 | `500m`                                      |
 | `mongo.resources.limits.memory`       | Memory limit                              | `512Mi`                                     |
-| `mongo.resources.requests.cpu`        | CPU request                               | `0.1`                                       |
+| `mongo.resources.requests.cpu`        | CPU request                               | `100m`                                      |
 | `mongo.resources.requests.memory`     | Memory request                            | `128Mi`                                     |
+| `mongo.persistence.enabled`           | Enable persistent volume for MongoDB data | `false`                                     |
+| `mongo.persistence.storageClass`      | Storage class for persistent volume       | `""`                                        |
+| `mongo.persistence.size`              | Persistent volume size                    | `8Gi`                                       |
+| `mongo.persistence.mountPath`         | Mount path in container                   | `/data/db`                                  |
 | `website.image`                       | Docker image for the website (nginx)      | `ghcr.io/abcdesktopio/oc.nginx`             |
-| `website.tag`                         | Docker image tag                          | `4.2`                                       |
+| `website.tag`                         | Docker image tag                          | `4.3`                                       |
 | `website.replicaCount`                | Number of replicas                        | `1`                                         |
 | `website.resources.limits.cpu`        | CPU limit                                 | `0.5`                                       |
 | `website.resources.limits.memory`     | Memory limit                              | `128Mi`                                     |
@@ -76,14 +85,14 @@ The following table contains the helm parameters:
 | `website.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `openldap.enabled`                    | boolean `true` or `false` to enable embedded openldap | `true`                          |
 | `openldap.image`                      | Docker image for OpenLDAP                 | `ghcr.io/abcdesktopio/docker-test-openldap` |
-| `openldap.tag`                        | Docker image tag                          | `4.2`                                       |
+| `openldap.tag`                        | Docker image tag                          | `4.3`                                       |
 | `openldap.replicaCount`               | Number of replicas                        | `1`                                         |
 | `openldap.resources.limits.cpu`       | CPU limit                                 | `0.5`                                       |
 | `openldap.resources.limits.memory`    | Memory limit                              | `2048Mi`                                    |
 | `openldap.resources.requests.cpu`     | CPU request                               | `0.1`                                       |
 | `openldap.resources.requests.memory`  | Memory request                            | `128Mi`                                     |
 | `pyos.image`                          | Docker image for PyOS                     | `ghcr.io/abcdesktopio/pyos`                 |
-| `pyos.tag`                            | Docker image tag                          | `4.2.alpine_latest`                         |
+| `pyos.tag`                            | Docker image tag                          | `4.3.alpine_latest`                         |
 | `pyos.replicaCount`                   | Number of replicas                        | `1`                                         |
 | `pyos.resources.limits.cpu`           | CPU limit                                 | `1`                                         |
 | `pyos.resources.limits.memory`        | Memory limit                              | `2048Mi`                                    |
@@ -95,7 +104,8 @@ The following table contains the helm parameters:
 | `pyos.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                     |
 | `pyos.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `router.image`                        | Docker image for the router               | `ghcr.io/abcdesktopio/route`                |
-| `router.tag`                          | Docker image tag                          | `4.2`                                       |
+| `router.tag`                          | Docker image tag                          | `4.3`                                       |
+| `router.nodePort`                     | Service Node Port                         | `30443` or leave empty/null to disable      |
 | `router.replicaCount`                 | Number of replicas                        | `1`                                         |
 | `router.resources.limits.cpu`         | CPU limit                                 | `0.5`                                       |
 | `router.resources.limits.memory`      | Memory limit                              | `512Mi`                                     |
@@ -107,7 +117,7 @@ The following table contains the helm parameters:
 | `router.autoscaling.targetCPUUtilizationPercentage`| CPU utilization percentage to trigger autoscaling | `80`                   |
 | `router.autoscaling.targetMemoryUtilizationPercentage`| Memory utilization percentage to trigger autoscaling (commented, not active by default)  | `80` |
 | `speedtest.image`                     | Docker image for the Speedtest service    | `ghcr.io/abcdesktopio/oc.speedtest`         |
-| `speedtest.tag`                       | Docker image tag                          | `4.2`                                       |
+| `speedtest.tag`                       | Docker image tag                          | `4.3`                                       |
 | `speedtest.replicaCount`              | Number of replicas                        | `1`                                         |
 | `speedtest.resources.limits.cpu`      | CPU limit                                 | `1`                                         |
 | `speedtest.resources.limits.memory`   | Memory limit                              | `128Mi`                                     |
@@ -140,16 +150,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.3.0.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.3.1.tgz
 ~~~
 
-The helm file **abcdesktop-4.3.0.tgz** is created.
+The helm file **abcdesktop-4.3.1.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.3.0.tgz
-==> Linting abcdesktop-4.3.0.tgz
+$ helm lint abcdesktop-4.3.1.tgz
+==> Linting abcdesktop-4.3.1.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -217,7 +227,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.3.0        	4.3.0      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.3.1        	4.3.1      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -229,7 +239,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.0.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.1.tgz  -n abcdesktop
 ~~~
 
 ## Customize the default value
@@ -237,7 +247,7 @@ $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.3.0.tgz  -
 - To disable local embedded openldap, if you are using your own ldap directory service
 
 `
-helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.3.0 --create-namespace -n abcdesktop
+helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.3.1 --create-namespace -n abcdesktop
 `
 
 

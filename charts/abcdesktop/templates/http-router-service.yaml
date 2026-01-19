@@ -4,7 +4,7 @@ metadata:
   name: http-router
   namespace: {{ .Release.Namespace }}
   labels:
-    abcdesktop/role: router-od
+    abcdesktop/role: router
 spec:
   type: NodePort
   selector:
@@ -12,6 +12,8 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    # nodePort: 30443
+{{- if .Values.router.nodePort }}
+    nodePort: {{ .Values.router.nodePort }}
+{{- end }}
     targetPort: 80
     name: http

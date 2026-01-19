@@ -28,6 +28,7 @@ spec:
         # is same as https://github.com/rroemhild/docker-test-openldap
         # but with posixAccount support
         image: {{ .Values.openldap.image }}:{{ .Values.openldap.tag }}
+        imagePullPolicy: Always
         resources:
           limits:
             cpu: {{ .Values.openldap.resources.limits.cpu }}
