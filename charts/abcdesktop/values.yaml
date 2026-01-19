@@ -652,42 +652,56 @@ od_config: |
     K8S_CREATE_EPHEMERALCONTAINER_TIMEOUT_SECONDS: 120
     # END OF K8S TIMEOUT
 
-    #
-    # Application execute class defined
-    # define some executeclasses name with
-    # resources requests and limits value
-    # then map executeclasses to application
     executeclasses : {
-      'default':{
-        'description': 'default: 1 CPU cores and 2Gi',
-        'nodeSelector':None,
-        'resources':{
-          'requests':{'memory':"512Mi",'cpu':"100m"},
-          'limits':  {'memory':"2Gi",'cpu':"1000m"}
-        }
-      },
-      'bronze':{
-        'description': 'bronze: 1 core / 2 Gi / 0 GPU',
-        'nodeSelector':None,
-        'resources':{
-          'requests':{'memory':"64Mi",'cpu':"100m"},
-          'limits':  {'memory':"2Gi",'cpu':"1000m"}
-        }
-      },
-      'silver':{
-        'description': 'silver: 2 cores / 4 Gi / 1 GPU',
-        'nodeSelector':None,
-        'resources':{
-          'requests':{'memory':"64Mi",'cpu':"100m"},
-          'limits':  {'memory':"4Gi",'cpu':"2000m", 'nvidia.com/gpu':'1' }
-        }
-      },
-      'gold':{
-        'description': 'gold: 4 cores / 8 Gi / 1 GPU',
-        'nodeSelector':None,
-        'resources':{
-          'requests':{'memory':"128Mi",'cpu':"100m"},
-          'limits':{'memory':"8Gi",'cpu':"4000m", 'nvidia.com/gpu':'1' } } } }
+    'default':{
+      'nodeSelector':None,
+      'description': 'default: up to 4 CPU cores and 8Gi',
+      'runtimeClassName': None,
+      'resources':{
+        'requests':{'memory':"576Mi",'cpu':"220m"},
+        'limits':  {'memory':"8Gi",'cpu':"4000m"}
+      }
+    },
+    'bronze':{
+      'nodeSelector':None,
+      'runtimeClassName': None,
+      'description': 'bronze: up to 2 CPU cores and 8Gi',
+      'resources':{
+        'requests':{'memory':"576Mi",'cpu':"220m"},
+        'limits':  {'memory':"8Gi",'cpu':"2000m"}
+      }
+    },
+    'silver':{
+      'nodeSelector': None,
+      'description': 'silver: 4 CPU cores and 32Gi RAM',
+      'runtimeClassName': None,
+      'resources':{
+        'requests':{'memory':"2Gi",'cpu':"2000m"}, 
+        'limits':{'memory':"32Gi",'cpu':"4000m"}
+      }
+    },
+    'gold':{
+      # to give a gpu to graphical container, add 'containers' entry
+      'containers' : { 'graphical': { 'resources': { 'limits': { 'nvidia.com/gpu':'1' } } } },
+      'nodeSelector':{'nvidia.com/gpu.present': 'true'},
+      'description': 'gold: 4 CPU cores, 32Gi RAM and 1 GPU',
+      'runtimeClassName': 'nvidia',
+      'resources':{
+        'requests':{'memory':"2Gi",'cpu':"4000m"}, 
+        'limits':  {'memory':"32Gi",'cpu':"4000m"}
+      }
+    },
+    'platinum':{
+      # to give a gpu to graphical container, add 'containers' entry
+      'containers' : { 'graphical': { 'resources': { 'limits': { 'nvidia.com/gpu':'1' } } } },
+      # nodeselector optional 
+      'nodeSelector':{'nvidia.com/gpu.present': 'true'},
+      # this appears only on web interface
+      'description': 'platinum: 8 CPU cores, 128G RAM and 1 GPU',
+      'runtimeClassName': 'nvidia',
+      'resources':{
+        'requests':{'memory':"4Gi",'cpu':"4000m"},
+        'limits':{'memory':"128Gi",'cpu':"8000m"} } } }
 
     # features_permissions
     # read executeclasses and permit a user to set a dedicated class name as desktop features
@@ -749,10 +763,6 @@ od_config: |
         'enable': True,
         'acl':  { 'permit': [ 'all' ] },
         'waitportbin' : '/composer/node/wait-port/node_modules/.bin/wait-port',
-        'resources': {
-          'requests': { 'memory': "512Mi", 'cpu': "100m"  },
-          'limits'  : { 'memory': "4Gi",   'cpu': "2000m" }
-        },
         'securityContext': {
           'readOnlyRootFilesystem': False,
           'allowPrivilegeEscalation': True,
@@ -799,10 +809,6 @@ od_config: |
         'enable': False,
         'tcpport': 681,
         'securityContext': { 'runAsUser': 0, 'runAsGroup': 0 },
-        'resources': {
-          'requests': { 'memory': "64Mi", 'cpu': "5m" },
-          'limits'  : { 'memory': "512Mi",  'cpu': "200m" }
-        },
         'acl':  { 'permit': [ 'all' ] }
       },
       # allow to download file in the printer queue
@@ -821,10 +827,6 @@ od_config: |
         'imagePullPolicy':  'IfNotPresent',
         'enable': True,
         'tcpport': 29783,
-        'resources': {
-          'requests': { 'memory': "32Mi", 'cpu': "5m" },
-          'limits'  : { 'memory': "256Mi",'cpu': "100m" }
-        },
         'acl':  { 'permit': [ 'all' ] }
       },
       # container sound
@@ -835,11 +837,7 @@ od_config: |
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
         'tcpport': 29788,
-        'acl':  { 'permit': [ 'all' ] },
-        'resources': {
-          'requests': { 'memory': "64Mi",  'cpu': "50m"  },
-          'limits'  : { 'memory': "256Mi", 'cpu': "500m" }
-        }
+        'acl':  { 'permit': [ 'all' ] }
       },
       # container init
       # a simple busybox to chowner and chmod of homedir
@@ -851,10 +849,6 @@ od_config: |
         'imagePullPolicy': 'IfNotPresent',
         'securityContext': { 'runAsUser': 0 },
         'acl':  { 'permit': [ 'all' ] },
-        'resources': { 
-          'requests': { 'memory': "16Mi",  'cpu': "50m"  },  
-          'limits'  : { 'memory': "32Mi", 'cpu': "100m" } 
-        }, 
         'command':  [ 
           'sh', 
           '-c',
