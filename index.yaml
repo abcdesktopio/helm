@@ -6,6 +6,27 @@ entries:
         fingerprint: 0x351794CC
         url: http://keyserver1.pgp.com/vkd/DownloadKey.event?keyid=0xD765E44E351794CC
     apiVersion: v2
+    appVersion: 4.3.2
+    created: "2026-01-29T12:00:56.460683582Z"
+    description: ABCDesktop helm chart
+    digest: e9f6a7593ce2a0b51fd910863094582f80b875348b7de385963f19d368776dcc
+    icon: https://www.abcdesktop.io/img/abcdesktop.svg
+    keywords:
+    - abcdesktop
+    - vdi
+    - desktop
+    - kubernetes
+    kubeVersion: '>=1.28.0-0'
+    name: abcdesktop
+    type: application
+    urls:
+    - https://github.com/abcdesktopio/helm/releases/download/abcdesktop-4.3.2/abcdesktop-4.3.2.tgz
+    version: 4.3.2
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: 0x351794CC
+        url: http://keyserver1.pgp.com/vkd/DownloadKey.event?keyid=0xD765E44E351794CC
+    apiVersion: v2
     appVersion: 4.3.1
     created: "2026-01-19T16:11:47.721560922Z"
     description: ABCDesktop helm chart
@@ -127,4 +148,4 @@ entries:
     urls:
     - https://abcdesktopio.github.io/helm/abcdesktop-4.0.0.tgz
     version: 4.0.0
-generated: "2026-01-19T16:11:47.721600065Z"
+generated: "2026-01-29T12:00:56.460725549Z"
