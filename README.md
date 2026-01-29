@@ -254,7 +254,7 @@ helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --
 ## Uninstall
 
 ~~~ bash
-$ helm uninstall abcdesktop -n abcdesktop
+$ helm uninstall my-abcdesktop -n abcdesktop
 ~~~
 
 where **abcdesktop** is the instance name.
