@@ -3,6 +3,9 @@ kind: Job
 metadata:
   namespace: {{ .Release.Namespace }}
   name: generate-mongod-keyfile
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
 spec:
   template:
     spec:
@@ -19,6 +22,7 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |
+
             openssl rand -base64 {{ .Values.mongo.keysgenerator.mongodkeylength }} > mongod.keyfile && \
             if ! kubectl get secret abcdesktop-mongod-keyfile --namespace={{ .Release.Namespace }} >/dev/null 2>&1; then
               kubectl create secret generic abcdesktop-mongod-keyfile --from-file=mongod.keyfile --namespace={{ .Release.Namespace }}
