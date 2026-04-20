@@ -1,6 +1,6 @@
 # format imagePullSecrets: [ { name: regcred } ]
 # where 'regcred' is a kubernetes secret in the namespace
-# 
+#
 # kubectl create secret docker-registry regcred \
 #   --docker-server=<your-registry-server> \
 #   --docker-username=<your-name> \
@@ -11,7 +11,7 @@ imagePullSecrets: []
 
 console:
   image: ghcr.io/abcdesktopio/console
-  tag: 4.3
+  tag: 4.4
   replicaCount: 1
   resources:
     limits:
@@ -23,7 +23,7 @@ console:
 
 memcached:
   image: ghcr.io/abcdesktopio/oc.memcached
-  tag: 4.3
+  tag: 4.4
   replicaCount: 1
   resources:
     limits:
@@ -37,8 +37,8 @@ mongo:
   enabled: true
   keysgenerator:
     image: ghcr.io/abcdesktopio/keysgenerator
-    tag: 4.3
-    mongodkeylength: 756   
+    tag: 4.4
+    mongodkeylength: 756
   # data:
   #   initContainerScriptPath: "data/mongo/init-container.sh"
   #   configFilePath: "data/mongo/etc/mongodb/mongod.conf"
@@ -55,7 +55,7 @@ mongo:
       memory: 512Mi
     requests:
       cpu: 100m
-      memory: 128Mi  
+      memory: 128Mi
   # Persistence - MongoDB data storage configuration
   persistence:
     # enabled: true for persistent volume, false for non-persistent volume (emptyDir)
@@ -65,11 +65,11 @@ mongo:
     # Persistent volume size
     size: 8Gi
     # Mount path in the container (do not change)
-    mountPath: /data/db      
+    mountPath: /data/db
 
 website:
   image: ghcr.io/abcdesktopio/oc.nginx
-  tag: 4.3
+  tag: 4.4
   replicaCount: 1
   resources:
     limits:
@@ -89,7 +89,7 @@ website:
 openldap:
   enabled: true
   image: ghcr.io/abcdesktopio/docker-test-openldap
-  tag: 4.3
+  tag: 4.4
   replicaCount: 1
   resources:
     limits:
@@ -101,7 +101,7 @@ openldap:
 
 pyos:
   image: ghcr.io/abcdesktopio/pyos
-  tag: 4.3.alpine_latest
+  tag: 4.4.alpine_latest
   replicaCount: 1
   resources:
     limits:
@@ -120,7 +120,7 @@ pyos:
 
 router:
   image: ghcr.io/abcdesktopio/route
-  tag: 4.3
+  tag: 4.4
   # nodePort: 30443  # or leave empty/null to disable
   replicaCount: 1
   resources:
@@ -140,7 +140,7 @@ router:
 
 speedtest:
   image: ghcr.io/abcdesktopio/oc.speedtest
-  tag: 4.3
+  tag: 4.4
   replicaCount: 1
   resources:
     limits:
@@ -152,7 +152,7 @@ speedtest:
 
 keysgenerator:
   image: ghcr.io/abcdesktopio/keysgenerator
-  tag: 4.3
+  tag: 4.4
   jwtdesktoppayloadkeylength: 2048
   jwtdesktopsigningkeylength: 2048
   jwtusersigningkeylength: 2048
@@ -180,7 +180,7 @@ od_config: |
     # kubectl create configmap abcdesktop-config --from-file=od.config -n abcdesktop
     #
     # same commands in one line
-    # kubectl create -n abcdesktop configmap abcdesktop-config --from-file=od.config -o yaml --dry-run=client | kubectl replace -n abcdesktop -f -
+    # kubectl create -n abcdesktop configmap abcdesktop-config --from-fileœod.config -o yaml --dry-run=client | kubectl replace -n abcdesktop -f -
     #
     # to restart pyos
     # quick and dirty
@@ -591,20 +591,20 @@ od_config: |
     # pkey=/etc/certs/privkey.pem
     #
     # in most cases, you need a stun and turn servers
-    # 
+    #
     # webrtc.rtc_configuration:{ 'iceServers':[ {'urls':'stun:stun.l.google.com:19302'} ] }
-    # webrtc.coturn: { 
-    #  'coturn_static_auth_secret': 'SUPERSECRETFORABCDESKTOPUSERS', 
-    #  'ttl':3600, 
+    # webrtc.coturn: {
+    #  'coturn_static_auth_secret': 'SUPERSECRETFORABCDESKTOPUSERS',
+    #  'ttl':3600,
     #  'protocol': 'turns',
     #  'url': 'turnserver.domain.local:3478' }
-    #  
+    #
     #  'coturn_static_auth_secret' is the sahred secret with coturn server
     #  'ttl' : ttl for auth
     #  'protocol': can be 'turn' or 'turns'
-    #  'url': turn server or turns server for the web browser 
+    #  'url': turn server or turns server for the web browser
     #
-    # pyos will build the rtc_configuration json conf 
+    # pyos will build the rtc_configuration json conf
     #
     # webrtc.rtc_configuration becomes
     # # {
@@ -621,7 +621,7 @@ od_config: |
     # # }
 
 
-    #    
+    #
     # webrtc.rtc_constraints
     # webrtc.rtc_constraints: { 'video': False, 'audio': True }
     # For both video and audio, its value is either a boolean or an object.
@@ -743,7 +743,7 @@ od_config: |
       # graphical is the main abcdesktop container
       # include x11 service
       'graphical' : {
-        'image': { 'default': 'ghcr.io/abcdesktopio/oc.user.ubuntu.sudo.24.04:4.3' },
+        'image': { 'default': 'ghcr.io/abcdesktopio/oc.user.ubuntu.sudo.24.04:4.4' },
         'volumes': [ 'sudoers', 'extrausers', 'x11socket', 'cupsdsocket', 'tmp', 'run', 'log', 'rundbus', 'runuser' ],
         'imagePullPolicy':  'Always',
         'enable': True,
@@ -755,7 +755,7 @@ od_config: |
           'supplementalGroups': [ '{{ supplementalGroups }}' ],
           'runAsUser': '{{ uidNumber }}',
           'runAsGroup': '{{ gidNumber }}',
-          'runAsNonRoot': True 
+          'runAsNonRoot': True
         },
         'tcpport': 6081,
         'secrets_requirement' : [ 'abcdesktop/vnc', 'abcdesktop/kerberos'],
@@ -790,7 +790,7 @@ od_config: |
       # printer is a cupsd service
       'printer' : {
         'volumes': [ 'tmp', 'cupsdsocket' ],
-        'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.3',
+        'image': 'ghcr.io/abcdesktopio/oc.cupsd:4.4',
         'imagePullPolicy': 'IfNotPresent',
         'enable': False,
         'tcpport': 681,
@@ -809,7 +809,7 @@ od_config: |
       # filer provide upload and download files features
       'filer' : {
         'volumes': [ 'extrausers', 'tmp', 'home', 'log' ],
-        'image': 'ghcr.io/abcdesktopio/oc.filer:4.3',
+        'image': 'ghcr.io/abcdesktopio/oc.filer:4.4',
         'imagePullPolicy':  'IfNotPresent',
         'enable': True,
         'tcpport': 29783,
@@ -819,7 +819,7 @@ od_config: |
       # sound is a pulseaudio service instance
       'sound': {
         'volumes': [ 'extrausers', 'tmp', 'home', 'log' ],
-        'image': 'ghcr.io/abcdesktopio/oc.pulseaudio:4.3',
+        'image': 'ghcr.io/abcdesktopio/oc.pulseaudio:4.4',
         'imagePullPolicy': 'IfNotPresent',
         'enable': True,
         'tcpport': 29788,
@@ -828,20 +828,20 @@ od_config: |
       # container init
       # a simple busybox to chowner and chmod of homedir
       # by defaul homedir belongs to root
-      'init': { 
+      'init': {
         'volumes': [ 'extrausers', 'sudoers', 'tmp', 'home' ],
         'image': 'busybox',
         'enable': True,
         'imagePullPolicy': 'IfNotPresent',
         'securityContext': { 'runAsUser': 0 },
         'acl':  { 'permit': [ 'all' ] },
-        'command':  [ 
-          'sh', 
+        'command':  [
+          'sh',
           '-c',
           'echo "$LOGNAME ALL=(ALL:ALL) ALL" > /etc/sudoers.d/$LOGNAME && \
           chmod 440 /etc/sudoers.d/* && \
           chown 0:0 /etc/sudoers.d/* && \
-          chmod 755 /etc/sudoers.d && \ 
+          chmod 755 /etc/sudoers.d && \
           chown 0:0 /etc/sudoers.d && \
           cp /var/secrets/abcdesktop/extrausers/group  \
               /var/secrets/abcdesktop/extrausers/passwd \
@@ -853,7 +853,7 @@ od_config: |
               /var/lib/extrausers/shadow \
               /var/lib/extrausers/gshadow  && \
           chmod 750 ~ && \
-          chown {{ uidNumber }}:{{ gidNumber }} ~' ] 
+          chown {{ uidNumber }}:{{ gidNumber }} ~' ]
       },
       #
       # application can run as ephemeral_container or as pod_application
@@ -903,7 +903,7 @@ od_config: |
     # read https://www.abcdesktopio.io/3.1/config/persistentvolumes/ to get more informations about pv and pvc
     #
     # values can be :
-    # desktop.homedirectorytype: None  # use a empty dir 
+    # desktop.homedirectorytype: None  # use a empty dir
     # desktop.homedirectorytype: 'persistentVolumeClaim'
     # desktop.homedirectorytype: 'hostPath'
     desktop.homedirectorytype: None  # use a empty dir
@@ -1111,9 +1111,9 @@ od_config: |
     # 'grabmouse': False,
     front.menuconfig  : { 'settings': True, 'appstore': True, 'screenshot':True, 'download': True, 'logout': True, 'disconnect': True }
 
-    # show a notification when image takes time to create 
-    # like pulling, pulled, 
-    # this does not include the top bar status, but only notifications popup 
+    # show a notification when image takes time to create
+    # like pulling, pulled,
+    # this does not include the top bar status, but only notifications popup
     front.imagenotification : { 'ephemeral_container' : False, 'pod_application' : False }
 
     #
