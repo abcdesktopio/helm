@@ -16,6 +16,10 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
         with:
           fetch-depth: 0
+
+      - name: Check docker images of the Helm charts
+        run: ./scripts/check-images.sh ./charts/abcdesktop/values.yaml
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -29,14 +33,14 @@ jobs:
           gpg_dir=.cr-gpg
           mkdir "$gpg_dir"
           keyring="$gpg_dir/secring.gpg" #referring keyring to private key of gpg
-          base64 -d <<< "$GPG_KEYRING_BASE64" > "$keyring" #storing base64 GPG key into keyring 
+          base64 -d <<< "$GPG_KEYRING_BASE64" > "$keyring" #storing base64 GPG key into keyring
           passphrase_file="$gpg_dir/passphrase"
           echo "$GPG_PASSPHRASE" > "$passphrase_file" #storing passphrase data into a file
           echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV" #saving passphrase into github-environment
           echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV" #saving private key into github-environemnt
         env:
           GPG_KEYRING_BASE64: "${{ secrets.GPG_KEYRING_BASE64 }}" #Referring secrets of github above
-          GPG_PASSPHRASE: "${{ secrets.GPG_PASSPHRASE }}"   
+          GPG_PASSPHRASE: "${{ secrets.GPG_PASSPHRASE }}"
       - name: Add repositories
         run: |
           for dir in $(ls -d charts/*/); do
