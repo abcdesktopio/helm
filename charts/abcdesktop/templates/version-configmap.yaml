@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: version-config
+  name: abcdesktop-version-config
   namespace: {{ .Release.Namespace }}
 data:
   versionConfig.json: |

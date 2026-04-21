@@ -39,6 +39,15 @@ spec:
           requests:
             cpu: {{ .Values.console.resources.requests.cpu }}
             memory: {{ .Values.console.resources.requests.memory }}
+        volumeMounts:
+          - name: version-config-volume
+            mountPath: /usr/share/nginx/html/config/versionConfig.json
+            subPath: versionConfig.json
+            readOnly: true
+      volumes:
+        - name: version-config-volume
+          configMap:
+            name:abcdesktop-version-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

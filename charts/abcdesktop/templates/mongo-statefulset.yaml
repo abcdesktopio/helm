@@ -18,6 +18,8 @@ spec:
       labels:
         run: mongodb-od
         type: database
+        netpol/mongodb: 'true'
+        netpol/dns: 'true'
     spec:
       terminationGracePeriodSeconds: 10
 
@@ -26,6 +28,13 @@ spec:
         - name: prepare-config
           image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
           imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
+          resources:
+            limits:
+              cpu: {{ .Values.mongo.resources.limits.cpu }}
+              memory: {{ .Values.mongo.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.mongo.resources.requests.cpu }}
+              memory:  {{ .Values.mongo.resources.requests.memory }}
           command:
             - sh
             - -c
