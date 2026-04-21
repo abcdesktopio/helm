@@ -18,7 +18,11 @@ jobs:
           fetch-depth: 0
 
       - name: Check docker images of the Helm charts
-        run: ./scripts/check-images.sh ./charts/abcdesktop/values.yaml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: ./scripts/check-images.sh ./charts/abcdesktop
 
       - name: Configure Git
         run: |
