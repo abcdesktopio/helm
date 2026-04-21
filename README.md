@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.4.2 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.4.3 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -150,16 +150,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.4.2.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.4.3.tgz
 ~~~
 
-The helm file **abcdesktop-4.4.2.tgz** is created.
+The helm file **abcdesktop-4.4.3.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.4.2.tgz
-==> Linting abcdesktop-4.4.2.tgz
+$ helm lint abcdesktop-4.4.3.tgz
+==> Linting abcdesktop-4.4.3.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -227,7 +227,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.4.2        	4.4.2      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.4.3        	4.4.3      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -239,7 +239,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.4.2.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.4.3.tgz  -n abcdesktop
 ~~~
 
 ## Customize the default value
@@ -247,7 +247,7 @@ $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.4.2.tgz  -
 - To disable local embedded openldap, if you are using your own ldap directory service
 
 `
-helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.4.2 --create-namespace -n abcdesktop
+helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.4.3 --create-namespace -n abcdesktop
 `
 
 
