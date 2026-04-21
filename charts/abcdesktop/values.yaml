@@ -161,6 +161,12 @@ keysgenerator:
 #    disktype: ssd
 nodeSelector: {}
 
+versionConfig.json: |-
+  {
+      "ABCDESKTOP_VERSION": "4.4",
+      "ABCDESKTOP_APPLICATIONS_LIST_URL": "https://raw.githubusercontent.com/abcdesktopio/images/refs/heads/main/appLists/appList.4.4.json"
+  }
+
 od_config: |
     # od.config
     # abcdesktop Configuration File
