@@ -6,4 +6,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   shadow: |
-    {{ uid }}:{{ sha512 }}:19080:0:99999:7:::
+    {{ "{{" }} uid {{ "}}" }}:{{ "{{" }} sha512 {{ "}}" }}:19080:0:99999:7:::

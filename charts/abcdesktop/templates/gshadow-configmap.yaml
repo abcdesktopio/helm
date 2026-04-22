@@ -6,6 +6,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   gshadow: |
-    sudo:*::{{ uid }}
-    lpadmin:!::root,{{ uid }}
-    {{ gid }}:!::{{ uid }}
+    sudo:*::{{ "{{" }} uid {{ "}}" }}
+    lpadmin:!::root,{{ "{{" }} uid {{ "}}" }}
+    {{ "{{" }} gid {{ "}}" }}:!::{{ "{{" }} uid {{ "}}" }}

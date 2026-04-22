@@ -6,4 +6,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   passwd: |
-    {{ uid }}:x:{{ uidNumber }}:{{ gidNumber }}:{{ gecos }}:{{ homeDirectory }}:{{ loginShell }}
+    {{ "{{" }} uid {{ "}}" }}:x:{{ "{{" }} uidNumber {{ "}}" }}:{{ "{{" }} gidNumber {{ "}}" }}:{{ "{{" }} gecos {{ "}}" }}:{{ "{{" }} homeDirectory {{ "}}" }}:{{ "{{" }} loginShell {{ "}}" }}
