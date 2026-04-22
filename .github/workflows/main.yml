@@ -65,3 +65,21 @@ jobs:
           CR_SIGN: true # set to true to sign images
           packages_with_index: true
           pages_branch: gh-pages
+      # Generate demo video using asciinema and upload it to github release
+      - uses: azure/setup-kubectl@v4
+      - uses: azure/setup-helm@v4
+      - uses: helm/kind-action@v1
+      - name: Generate demo video
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sudo apt update
+          sudo apt install -y asciinema curl tree util-linux
+          curl -LO https://github.com/asciinema/agg/releases/latest/download/agg-x86_64-unknown-linux-gnu
+          chmod +x agg-x86_64-unknown-linux-gnu
+          script -q -c "stty cols 120 rows 30 && asciinema rec demo.cast -c ./scripts/generate-video.sh" /dev/null
+          VERSION=$(grep appVersion "charts/abcdesktop/Chart.yaml" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
+          ./agg-x86_64-unknown-linux-gnu demo.cast ./install-using-helm.gif
+          gh release upload abcdesktop-$VERSION ./install-using-helm.gif --clobber
+
