@@ -5,4 +5,4 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   versionConfig.json: |
-{{ .Values.versionConfig.json | indent 4  }}
+{{ .Values.versionConfigJson | indent 4  }}
