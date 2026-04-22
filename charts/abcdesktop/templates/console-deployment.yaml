@@ -47,7 +47,7 @@ spec:
       volumes:
         - name: version-config-volume
           configMap:
-            name:abcdesktop-version-config
+            name: abcdesktop-version-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
