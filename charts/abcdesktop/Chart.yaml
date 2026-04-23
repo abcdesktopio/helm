@@ -2,8 +2,8 @@ apiVersion: v2
 name: abcdesktop
 description: ABCDesktop helm chart
 type: application
-version: 4.4.7
-appVersion: "4.4.7"
+version: 4.4.8
+appVersion: "4.4.8"
 icon: https://www.abcdesktop.io/img/abcdesktop.svg
 keywords: [abcdesktop, vdi, desktop, kubernetes]
 kubeVersion: ">=1.28.0-0"
