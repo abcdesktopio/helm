@@ -3,9 +3,9 @@ kind: Job
 metadata:
   namespace: {{ .Release.Namespace }}
   name: generate-mongod-keyfile
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "5"
+  # annotations:
+  #   "helm.sh/hook": pre-install,post-upgrade
+  #   "helm.sh/hook-weight": "5"
 spec:
   template:
     spec:
