@@ -13,6 +13,7 @@ console:
   image: ghcr.io/abcdesktopio/console
   tag: 4.4
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 0.5
@@ -25,6 +26,7 @@ memcached:
   image: ghcr.io/abcdesktopio/oc.memcached
   tag: 4.4
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 0.2
@@ -49,6 +51,7 @@ mongo:
     tag: "safe8.0"
     pullPolicy: Always
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 500m
@@ -71,6 +74,7 @@ website:
   image: ghcr.io/abcdesktopio/oc.nginx
   tag: 4.4
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 0.5
@@ -91,6 +95,7 @@ openldap:
   image: ghcr.io/abcdesktopio/docker-test-openldap
   tag: 4.4
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 0.5
@@ -123,6 +128,7 @@ router:
   tag: 4.4
   # nodePort: 30443  # or leave empty/null to disable
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 0.5
@@ -142,6 +148,7 @@ speedtest:
   image: ghcr.io/abcdesktopio/oc.speedtest
   tag: 4.4
   replicaCount: 1
+  automountServiceAccountToken: false
   resources:
     limits:
       cpu: 0.5

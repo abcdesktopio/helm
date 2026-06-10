@@ -29,6 +29,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      automountServiceAccountToken: {{ .Values.router.automountServiceAccountToken }}
       containers:
       - name: nginx-router
         imagePullPolicy: Always

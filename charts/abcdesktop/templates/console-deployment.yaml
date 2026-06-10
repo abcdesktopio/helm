@@ -21,6 +21,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      automountServiceAccountToken: {{ .Values.console.automountServiceAccountToken }}
       containers:
       - name: console
         imagePullPolicy: Always
