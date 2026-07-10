@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-init-replica
+  namespace: {{ .Release.Namespace }}
+  labels:
+    abcdesktop/role: mongodb
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init-replica
+        image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
+        imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
+        command:
+          - bash
+          - -c
+          - |
+            /scripts/init-replica.sh
+        env:
+          - name: NAMESPACE
+            value: "{{ .Release.Namespace }}"
+          - name: SERVICE
+            value: mongodb
+          - name: STATEFULSET_NAME
+            value: mongodb-od
+          - name: REPLICAS
+            value: "{{ .Values.mongo.replicaCount }}"
+          - name: MONGO_INITDB_ROOT_USERNAME_FILE
+            value: /etc/abcdesktop/admin/MONGO_ROOT_USERNAME
+          - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+            value: /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD
+          - name: MONGO_AUTH_DB
+            value: admin
+        volumeMounts:
+          - name: scripts
+            mountPath: /scripts/init-replica.sh
+            subPath: init-replica.sh
+          - name: abcdesktop
+            mountPath: /etc/abcdesktop
+            readOnly: true
+      volumes:
+        - name: scripts
+          configMap:
+            name: configmap-mongodb-scripts
+            defaultMode: 0755
+            items:
+              - key: init-replica.sh
+                path: init-replica.sh  
+        - name: abcdesktop
+          secret:
+            secretName: secret-mongodb
+            items:
+            - key: MONGO_ROOT_USERNAME
+              path: admin/MONGO_ROOT_USERNAME
+              mode: 0400
+            - key: MONGO_ROOT_PASSWORD
+              path: admin/MONGO_ROOT_PASSWORD
+              mode: 0400
+            - key: MONGO_USERNAME
+              path: MONGO_USERNAME
+              mode: 0400
+            - key: MONGO_PASSWORD
+              path: MONGO_PASSWORD
+              mode: 0400
+            - key: MONGO_USERS_LIST
+              path: MONGO_USERS_LIST
+              mode: 0400
+            - key: MONGO_DBS_LIST
+              path: MONGO_DBS_LIST
+              mode: 0400                

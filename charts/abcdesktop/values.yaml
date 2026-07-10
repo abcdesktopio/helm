@@ -36,6 +36,10 @@ memcached:
       memory: 16Mi
 
 mongo:
+  # NOTE: password generation relies on Helm's `lookup` function to persist
+  # credentials across upgrades. This requires a live connection to the
+  # Kubernetes API — see "Known limitations" in README.md before using
+  # `helm template` or a client-side `--dry-run` with this chart.
   enabled: true
   keysgenerator:
     image: ghcr.io/abcdesktopio/keysgenerator

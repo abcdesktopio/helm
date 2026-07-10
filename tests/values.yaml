@@ -1,0 +1,4 @@
+mongo:
+  replicaCount: 3
+  persistence:
+    enabled: true

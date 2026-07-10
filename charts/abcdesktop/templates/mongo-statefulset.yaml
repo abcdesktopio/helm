@@ -21,6 +21,8 @@ spec:
         netpol/mongodb: 'true'
         netpol/dns: 'true'
     spec:
+      securityContext:
+        fsGroup: 999
       terminationGracePeriodSeconds: 10
       automountServiceAccountToken: {{ .Values.mongo.automountServiceAccountToken }}
 
@@ -91,62 +93,25 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
           failureThreshold: 6
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - |
+                mongosh \
+                  --quiet \
+                  --username "$(cat /etc/abcdesktop/admin/MONGO_ROOT_USERNAME)" \
+                  --password "$(cat /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD)" \
+                  --authenticationDatabase admin \
+                  --eval "try { db.adminCommand('ping').ok === 1 ? quit(0) : quit(1) } catch(e) { quit(1) }"
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
         resources:
 {{ toYaml .Values.mongo.resources | indent 10 }}
-
-      # --- Sidecar: replica set manager ---
-      - name: replica-manager
-        image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
-        imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
-        command:
-          - sh
-          - -c
-          - |
-            # Execute init-replica.sh only on pod 0
-            if [ "$(hostname)" = "mongodb-od-0" ]; then
-              echo "Running replica set initialization on $(hostname)...";
-              /bin/bash /scripts/init-replica.sh;
-            else
-              echo "Not primary pod, keeping sidecar alive...";
-            fi
-            sleep infinity;
-        env:
-          - name: NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-          - name: SERVICE
-            value: mongodb
-          - name: STATEFULSET_NAME
-            value: mongodb-od
-          - name: REPLICAS
-            value: "{{ .Values.mongo.replicaCount }}"
-          - name: MONGO_INITDB_ROOT_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: secret-mongodb
-                key: MONGO_ROOT_USERNAME
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: secret-mongodb
-                key: MONGO_ROOT_PASSWORD
-          - name: MONGO_AUTH_DB
-            value: admin
-        volumeMounts:
-          - name: init-replica-script
-            mountPath: /scripts/init-replica.sh
-            subPath: init-replica.sh
-            readOnly: true
-        resources:
-{{ toYaml .Values.mongo.resources | indent 10 }}
-          # limits:
-          #   cpu: 100m
-          #   memory: 128Mi
-          # requests:
-          #   cpu: 50m
-          #   memory: 64Mi
-
       # --- Non-persistent volumes
       volumes:
         - name: init-container-script
@@ -168,35 +133,28 @@ spec:
             items:
             - key: MONGO_ROOT_USERNAME
               path: admin/MONGO_ROOT_USERNAME
-              mode: 0444
+              mode: 0400
             - key: MONGO_ROOT_PASSWORD
               path: admin/MONGO_ROOT_PASSWORD
-              mode: 0444
+              mode: 0400
             - key: MONGO_USERNAME
               path: MONGO_USERNAME
-              mode: 0444
+              mode: 0400
             - key: MONGO_PASSWORD
               path: MONGO_PASSWORD
-              mode: 0444
+              mode: 0400
             - key: MONGO_USERS_LIST
               path: MONGO_USERS_LIST
-              mode: 0444
+              mode: 0400
             - key: MONGO_DBS_LIST
               path: MONGO_DBS_LIST
-              mode: 0444
+              mode: 0400
         - name: init-script
           configMap:
             name: configmap-mongodb-scripts
             items:
               - key: init.js
                 path: init.js
-        - name: init-replica-script
-          configMap:
-            name: configmap-mongodb-scripts
-            items:
-              - key: init-replica.sh
-                path: init-replica.sh
-            defaultMode: 0755
         - name: keyfile
           secret:
             secretName: abcdesktop-mongod-keyfile

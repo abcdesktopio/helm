@@ -237,8 +237,8 @@ data:
     SERVICE="${SERVICE:-mongodb}"
     STATEFULSET_NAME="${STATEFULSET_NAME:-mongodb-od}"
     REPLICAS="${REPLICAS:-1}"
-    MONGO_USER="${MONGO_INITDB_ROOT_USERNAME:-admin}"
-    MONGO_PASSWORD="${MONGO_INITDB_ROOT_PASSWORD:-veryStrongPassword}"
+    MONGO_USER="$(cat "${MONGO_INITDB_ROOT_USERNAME_FILE}")" || { echo "Error: username file not found"; exit 1; }
+    MONGO_PASSWORD="$(cat "${MONGO_INITDB_ROOT_PASSWORD_FILE}")" || { echo "Error: password file not found"; exit 1; }
     MONGO_AUTH_DB="${MONGO_AUTH_DB:-admin}"
     SLEEP_TIME=5
     MAX_WAIT_ATTEMPTS=60

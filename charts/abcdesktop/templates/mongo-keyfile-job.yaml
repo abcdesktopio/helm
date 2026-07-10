@@ -3,13 +3,14 @@ kind: Job
 metadata:
   namespace: {{ .Release.Namespace }}
   name: generate-mongod-keyfile
-  # annotations:
-  #   "helm.sh/hook": pre-install,post-upgrade
-  #   "helm.sh/hook-weight": "5"
+  annotations:
+    "helm.sh/hook": pre-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   template:
     spec:
-      serviceAccountName: pyos-serviceaccount
+      serviceAccountName: mongo-keyfile-serviceaccount
       restartPolicy: OnFailure
       {{- with .Values.mongo.imagePullSecrets }}
       imagePullSecrets:

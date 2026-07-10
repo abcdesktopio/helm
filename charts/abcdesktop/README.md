@@ -16,7 +16,7 @@ helm repo add abcdesktop https://abcdesktopio.github.io/helm/
 Install chart
 
 ```
-helm install my-abcdesktop abcdesktop/abcdesktop --version 4.4.10 --create-namespace -n abcdesktop
+helm install my-abcdesktop abcdesktop/abcdesktop --version 4.4.11 --create-namespace -n abcdesktop
 ```
 
 ## To connect
@@ -150,16 +150,16 @@ and build package:
 
 ~~~ bash
 $ helm package ./abcdesktop/
-Successfully packaged chart and saved it to: abcdesktop-4.4.10.tgz
+Successfully packaged chart and saved it to: abcdesktop-4.4.11.tgz
 ~~~
 
-The helm file **abcdesktop-4.4.10.tgz** is created.
+The helm file **abcdesktop-4.4.11.tgz** is created.
 
 Let's lint it:
 
 ~~~ bash
-$ helm lint abcdesktop-4.4.10.tgz
-==> Linting abcdesktop-4.4.10.tgz
+$ helm lint abcdesktop-4.4.11.tgz
+==> Linting abcdesktop-4.4.11.tgz
 
 1 chart(s) linted, 0 chart(s) failed
 ========================================
@@ -227,7 +227,7 @@ To list the available versions, run the command:
 ~~~ bash
 helm search repo abcdesktop
 NAME                 	CHART VERSION	APP VERSION	DESCRIPTION
-abcdesktop/abcdesktop	4.4.10        	4.4.10      	ABCDesktop helm chart
+abcdesktop/abcdesktop	4.4.11        	4.4.11      	ABCDesktop helm chart
 ~~~
 
 Then to install:
@@ -239,7 +239,7 @@ helm upgrade --install abcdesktop --create-namespace abcdesktop/abcdesktop -n ab
 ### From local build
 
 ~~~ bash
-$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.4.10.tgz  -n abcdesktop
+$ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.4.11.tgz  -n abcdesktop
 ~~~
 
 ## Customize the default value
@@ -247,7 +247,7 @@ $ helm upgrade --install abcdesktop --create-namespace ./abcdesktop-4.4.10.tgz  
 - To disable local embedded openldap, if you are using your own ldap directory service
 
 `
-helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.4.10 --create-namespace -n abcdesktop
+helm install --set openldap.enabled=false my-abcdesktop abcdesktop/abcdesktop --version 4.4.11 --create-namespace -n abcdesktop
 `
 
 
@@ -258,3 +258,73 @@ $ helm uninstall my-abcdesktop -n abcdesktop
 ~~~
 
 where **abcdesktop** is the instance name.
+
+## Known limitations
+
+### MongoDB credentials and Helm's `lookup` function
+
+The `secret-mongodb` Secret is generated only once and then reused across
+upgrades, so that redeploying the chart does not rotate credentials that are
+already in use by a running MongoDB instance. This is implemented in
+`templates/mongo-secret.yaml` using Helm's `lookup` function: if the Secret
+already exists in the target namespace, its existing password values are
+reused; otherwise, new random passwords are generated.
+
+**This mechanism has an important constraint**: `lookup` only works when Helm
+has a live connection to the Kubernetes API server. It does **not** work with:
+
+- `helm template`
+- `helm install --dry-run` / `helm upgrade --dry-run` (client-side dry-run)
+- most GitOps pipelines (ArgoCD, Flux) that render manifests offline before
+  applying them
+
+In all of these cases, `lookup` returns an empty result, and the chart will
+generate **new random passwords on every render** — even if a Secret with
+different values already exists live in the cluster. This can lead to a
+mismatch between the rendered Secret and the credentials MongoDB was actually
+initialized with.
+
+**Recommendations:**
+
+- When validating this chart in CI, prefer server-side dry-run over a plain
+  template render:
+
+```bash
+  helm upgrade --install abcdesktop ./charts/abcdesktop --dry-run=server
+```
+
+  `--dry-run=server` submits the request to the Kubernetes API server (which
+  validates and simulates the change without persisting it), so `lookup`
+  behaves correctly — unlike a purely client-side dry-run or `helm template`.
+
+- Never delete the `secret-mongodb` Secret manually unless you also intend to
+  reset the underlying MongoDB data (e.g. wipe the persistent volume). Deleting
+  the Secret without wiping the data will cause a new random password to be
+  generated on the next install, which will no longer match the credentials
+  already configured inside MongoDB.
+
+- If your deployment process relies on `helm template` or a client-side
+  dry-run as part of a strict GitOps workflow, be aware that credential
+  rotation may occur unexpectedly on every render. In that context, consider
+  migrating credential management to an external secrets manager (e.g.
+  [External Secrets Operator](https://external-secrets.io/) or
+  [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)) to make
+  Secret generation fully deterministic and independent of `helm template`.
+
+### Password rotation
+
+Rotating MongoDB credentials is **not automatic** and cannot be done by simply
+deleting the `secret-mongodb` Secret: the password stored in the Secret must
+always match the password actually configured inside MongoDB's own user
+store, or authentication will break for every workload connecting to the
+database.
+
+To rotate a password, follow this order:
+1. Change the password inside MongoDB itself (`db.changeUserPassword(...)`).
+2. Update the `secret-mongodb` Secret to match the new value.
+3. Restart any workload that reads `MONGODB_URL` from the Secret.
+
+There is currently no automated rotation job in this chart. If your
+compliance requirements mandate periodic credential rotation, consider
+automating the three steps above in a CronJob, or migrating to an external
+secrets manager with native rotation support (see "lookup limitations" above).

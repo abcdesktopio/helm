@@ -62,9 +62,9 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "abcdesktop.mongorootpassword" -}}
-{{- randAlphaNum 16 | b64enc | trunc 16 -}}
+{{- randAlphaNum 20 -}}
 {{- end }}
 
 {{- define "abcdesktop.mongopassword" -}}
-{{- randAlphaNum 16 | b64enc | trunc 16 -}}
+{{- randAlphaNum 20 -}}
 {{- end }}
