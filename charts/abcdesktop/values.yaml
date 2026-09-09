@@ -76,7 +76,7 @@ mongo:
 
 website:
   image: ghcr.io/abcdesktopio/oc.nginx
-  tag: 4.4
+  tag: 4.4.1
   replicaCount: 1
   automountServiceAccountToken: false
   resources:
