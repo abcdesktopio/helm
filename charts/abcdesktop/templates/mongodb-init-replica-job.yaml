@@ -14,6 +14,10 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: init-replica
         image: {{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
