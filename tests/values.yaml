@@ -1,4 +1,7 @@
 mongo:
-  replicaCount: 3
+  replicaCount: 1
   persistence:
     enabled: true
+
+pyos:
+  replicaCount: 3

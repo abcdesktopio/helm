@@ -25,6 +25,10 @@ spec:
         fsGroup: 999
       terminationGracePeriodSeconds: 10
       automountServiceAccountToken: {{ .Values.mongo.automountServiceAccountToken }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -54,9 +58,6 @@ spec:
             - name: config
               mountPath: /input/mongod.conf
               subPath: mongod.conf
-            - name: keyfile
-              mountPath: /input/mongod.keyfile
-              subPath: mongod.keyfile
             - name: prepared-config
               mountPath: /work/config
             - name: logs
@@ -98,17 +99,8 @@ spec:
           periodSeconds: 10
           failureThreshold: 6
         livenessProbe:
-          exec:
-            command:
-              - sh
-              - -c
-              - |
-                mongosh \
-                  --quiet \
-                  --username "$(cat /etc/abcdesktop/admin/MONGO_ROOT_USERNAME)" \
-                  --password "$(cat /etc/abcdesktop/admin/MONGO_ROOT_PASSWORD)" \
-                  --authenticationDatabase admin \
-                  --eval "try { db.adminCommand('ping').ok === 1 ? quit(0) : quit(1) } catch(e) { quit(1) }"
+          tcpSocket:
+            port: 27017
           initialDelaySeconds: 60
           periodSeconds: 20
           timeoutSeconds: 10
@@ -159,9 +151,6 @@ spec:
             items:
               - key: init.js
                 path: init.js
-        - name: keyfile
-          secret:
-            secretName: abcdesktop-mongod-keyfile
         - name: prepared-config
           emptyDir: {}
         - name: logs

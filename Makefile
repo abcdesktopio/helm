@@ -12,6 +12,8 @@ REMOTE_REPO_URL ?= https://abcdesktopio.github.io/helm/
 CHART_NAME ?= abcdesktop
 
 LOCAL_CHART ?= ./charts/abcdesktop
+CHART_VERSION ?= $(shell sed -n 's/^version: //p' $(LOCAL_CHART)/Chart.yaml)
+CHART_PACKAGE ?= ./$(CHART_NAME)-$(CHART_VERSION).tgz
 
 VALUES ?= -f ./tests/values.yaml
 EXTRA_ARGS ?=
@@ -38,10 +40,12 @@ help:
 	@echo "  make repo-update           Update the helm repository"
 	@echo ""
 	@echo "  make install-remote        Install from the remote repository"
-	@echo "  make uninstall-remote      Uninstall"
+	@echo "  make uninstall-remote      Uninstall and delete namespace"
 	@echo ""
 	@echo "  make install-local         Install from the local chart"
-	@echo "  make uninstall-local       Uninstall"
+	@echo "  make uninstall-local       Uninstall and delete namespace"
+	@echo "  make install-package       Package and install the local chart artifact"
+	@echo "  make uninstall-package     Uninstall and delete namespace"
 	@echo ""
 	@echo "  make check-images          Check that the chart images are available"
 	@echo ""
@@ -53,6 +57,7 @@ help:
 	@echo "  NAMESPACE=abcdesktop"
 	@echo "  RELEASE=abcdesktop"
 	@echo "  VALUES=-f ./tests/values.yaml"
+	@echo "  CHART_PACKAGE=$(CHART_PACKAGE)"
 	@echo "  EXTRA_ARGS=..."
 	@echo "  MONGO_POD=mongodb-od-0"
 	@echo "  MONGO_SECRET_NAME=secret-mongodb"
@@ -92,6 +97,7 @@ install-remote: repo-add repo-update
 .PHONY: uninstall-remote
 uninstall-remote:
 	helm uninstall $(RELEASE) -n $(NAMESPACE)
+	kubectl delete namespace $(NAMESPACE) --ignore-not-found
 
 # -----------------------------------------------------------------------------
 # Install from local chart
@@ -110,6 +116,21 @@ install-local:
 .PHONY: uninstall-local
 uninstall-local:
 	helm uninstall $(RELEASE) -n $(NAMESPACE)
+	kubectl delete namespace $(NAMESPACE) --ignore-not-found
+
+.PHONY: install-package uninstall-package
+install-package: package
+	helm upgrade --install \
+		$(RELEASE) \
+		$(CHART_PACKAGE) \
+		--namespace $(NAMESPACE) \
+		--create-namespace \
+		$(VALUES) \
+		$(EXTRA_ARGS)
+
+uninstall-package:
+	helm uninstall $(RELEASE) -n $(NAMESPACE)
+	kubectl delete namespace $(NAMESPACE) --ignore-not-found
 
 .PHONY: lint
 lint:
