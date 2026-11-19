@@ -41,11 +41,11 @@ spec:
           imagePullPolicy: {{ .Values.mongo.image.pullPolicy }}
           resources:
             limits:
-              cpu: {{ .Values.mongo.resources.limits.cpu }}
-              memory: {{ .Values.mongo.resources.limits.memory }}
+              cpu: 500m
+              memory: 512Mi
             requests:
-              cpu: {{ .Values.mongo.resources.requests.cpu }}
-              memory:  {{ .Values.mongo.resources.requests.memory }}
+              cpu: 100m
+              memory:  128Mi
           command:
             - sh
             - -c

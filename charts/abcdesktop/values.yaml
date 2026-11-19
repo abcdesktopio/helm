@@ -559,7 +559,7 @@ od_config: |
     # mongodburl: 'mongodb://localhost:27017'
     # mongodburl: 'mongodb://pyos:Az4MeYWUjZDg4Zjhk@mongodb.abcdesktop.svc.cluster.local:32017'
     # mongodburl: 'mongodb://mongodb.abcdesktop.svc.cluster.local:32017'
-    # mongodbparam: 'directConnection=true'
+    mongodbparam: 'directConnection=true'
     # time to live applist data
     mongodb_applist_ttl: 300
     # END OF MONGO SECTION
@@ -1308,6 +1308,10 @@ od_config: |
           'cherrypy' : {
             'handlers': [ 'stderr', 'stdout',  'trace' ],
             'level': 'ERROR',
+          },		
+          'pymongo': {		
+            'handlers': [ 'stderr', 'stdout',  'trace' ],		
+            'level': 'ERROR',		
           }
         },
         'root': {
